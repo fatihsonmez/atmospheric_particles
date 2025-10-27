@@ -114,7 +114,10 @@ for(int i = 0; i < 10; i++)
 
 ### Have Suggestions or Find a Bug?
 
-If you have any suggestions or encounter a bug, please feel free to:
+If you have any suggestions or encounter a bug, we'd love to hear from you!
+
+  * **Visit the GitHub Repository:** For the source code, to see existing issues, or to learn more about the project: [atmospheric\_particles on GitHub](https://github.com/fatihsonmez/atmospheric_particles)
+  * **Open an Issue on GitHub:** This is the preferred method for tracking bugs and feature requests.
   * Email me at fatih.sonmez@bosphorusiss.com
 
 ### License
