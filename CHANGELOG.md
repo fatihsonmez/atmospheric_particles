@@ -1,3 +1,8 @@
+## [0.2.3]
+
+#### Added
+* Added `trailLength` property to `AtmosphericParticles` to enable and control the length of particle trails.
+
 ## [0.2.2]
 
 #### Added

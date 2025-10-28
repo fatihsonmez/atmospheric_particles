@@ -113,6 +113,7 @@ SizedBox(
 | **`minHorizontalVelocity`** | `double` | The minimum *horizontal* speed. (Negative for left, positive for right). Defaults to `10`. |
 | **`maxHorizontalVelocity`** | `double` | The maximum *horizontal* speed. (Negative for left, positive for right). Defaults to `30`. |
 | **`particlesInFront`** | `bool` | Whether the particles should be rendered in front of the child widget. Defaults to `false`. |
+| **`trailLength`** | `int` | The number of historical positions to store for each particle, creating a trail effect. Defaults to `0` (no trail). |
 
 ## Additional Information
 
