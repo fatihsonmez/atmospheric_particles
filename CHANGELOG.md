@@ -1,3 +1,11 @@
+## [0.3.0]
+
+#### Added
+* Added `minParticleRadius` and `maxParticleRadius` properties to `AtmosphericParticles` to allow for particle size variation.
+
+#### Changed
+* **Breaking Change:** Replaced `particleRadius` with `minParticleRadius` and `maxParticleRadius` in `AtmosphericParticles`.
+
 ## [0.2.4]
 
 #### Added

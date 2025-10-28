@@ -107,14 +107,14 @@ SizedBox(
 | **`fadeDirection`** | `FadeDirection` | The direction of the opacity gradient. Can be `FadeDirection.top`, `bottom`, `left`, `right`, or `none`. Defaults to `FadeDirection.none`. |
 | **`particleColor`** | `Color` | The color of the particles. Defaults to `Colors.purple` with opacity. |
 | **`particleCount`** | `int` | The total number of particles to render. Defaults to `200`. |
-| **`particleRadius`** | `double` | The radius of each particle. Defaults to `2`. |
+| **`minParticleRadius`** | `double` | The minimum radius of each particle. Defaults to `2`. |
+| **`maxParticleRadius`** | `double` | The maximum radius of each particle. Defaults to `2`. |
 | **`minVerticalVelocity`** | `double` | The minimum *upward* speed. (Use negative values for upward motion). Defaults to `-100`. |
 | **`maxVerticalVelocity`** | `double` | The maximum *upward* speed. (Use negative values for upward motion). Defaults to `-20`. |
 | **`minHorizontalVelocity`** | `double` | The minimum *horizontal* speed. (Negative for left, positive for right). Defaults to `10`. |
 | **`maxHorizontalVelocity`** | `double` | The maximum *horizontal* speed. (Negative for left, positive for right). Defaults to `30`. |
 | **`particlesInFront`** | `bool` | Whether the particles should be rendered in front of the child widget. Defaults to `false`. |
 | **`trailLength`** | `int` | The number of historical positions to store for each particle, creating a trail effect. Defaults to `0` (no trail). |
-| **`particleShape`** | `ParticleShape` | The shape of the particles. Can be `ParticleShape.circle`, `square`, `triangle`, `oval`, or `rrect`. Defaults to `ParticleShape.circle`. |
 
 ## Additional Information
 
