@@ -1,3 +1,12 @@
+## [0.2.1]
+
+#### Fixed
+* Particle isolate test hanging due to improper shutdown handling.
+* Isolate resource leak by implementing graceful disposal in `ParticleCanvas` using `onExit` port.
+
+#### Changed
+* Refactored core particle files into `lib/src` directory for better project structure.
+
 ## [0.2.0]
 
 #### Added

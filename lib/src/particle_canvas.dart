@@ -87,6 +87,7 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
   final Random _random = Random();
 
   /// The isolate where the particle animation logic runs.
+  // ignore: unused_field
   Isolate? _isolate;
 
   /// The port to send messages to the isolate.
