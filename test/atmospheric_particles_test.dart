@@ -54,4 +54,54 @@ void main() {
 
     expect(painter.fadeDirection, FadeDirection.bottom);
   });
+
+  testWidgets(
+      'AtmosphericParticles places particles in front when particlesInFront is true',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: AtmosphericParticles(
+            particlesInFront: true,
+            child: Text('Child Widget'),
+          ),
+        ),
+      ),
+    );
+
+    final stackFinder = find.descendant(
+      of: find.byType(AtmosphericParticles),
+      matching: find.byType(Stack),
+    );
+    final stack = tester.widget<Stack>(stackFinder);
+
+    // When particlesInFront is true, ParticleCanvas should be after the child
+    expect(stack.children.first, isA<Text>());
+    expect(stack.children.last, isA<ClipRRect>()); // ClipRRect wraps ParticleCanvas
+  });
+
+  testWidgets(
+      'AtmosphericParticles places particles in background when particlesInFront is false',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: AtmosphericParticles(
+            particlesInFront: false,
+            child: Text('Child Widget'),
+          ),
+        ),
+      ),
+    );
+
+    final stackFinder = find.descendant(
+      of: find.byType(AtmosphericParticles),
+      matching: find.byType(Stack),
+    );
+    final stack = tester.widget<Stack>(stackFinder);
+
+    // When particlesInFront is false, ParticleCanvas should be before the child
+    expect(stack.children.first, isA<ClipRRect>()); // ClipRRect wraps ParticleCanvas
+    expect(stack.children.last, isA<Text>());
+  });
 }

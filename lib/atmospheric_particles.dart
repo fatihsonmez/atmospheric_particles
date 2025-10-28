@@ -30,6 +30,7 @@ class AtmosphericParticles extends StatelessWidget {
     this.particleCount = 200,
     this.particleRadius = 2,
     this.width = double.infinity,
+    this.particlesInFront = false,
   }) : assert(
           particleRadius > 0,
           'particleRadius must be bigger than 0',
@@ -78,41 +79,41 @@ class AtmosphericParticles extends StatelessWidget {
   /// The widget to display in front of the particle animation.
   final Widget child;
 
+  /// Whether the particles should be rendered in front of the child widget.
+  /// Defaults to `false`, meaning particles are in the background.
+  final bool particlesInFront;
+
   @override
   Widget build(BuildContext context) {
     // Use LayoutBuilder to get the constraints (max width/height) from the parent.
     // This is essential for making `double.infinity` work correctly.
     return LayoutBuilder(
       builder: (context, constraints) {
-        // Use a Stack to overlay the child on top of the particle canvas.
+        final particleCanvas = ClipRRect(
+          child: ParticleCanvas(
+            // If the user provided a finite width, use it.
+            // Otherwise, use the maxWidth from the LayoutBuilder.
+            width: width.isInfinite ? constraints.maxWidth : width,
+            // If the user provided a finite height, use it.
+            // Otherwise, use the maxHeight from the LayoutBuilder.
+            height: height.isInfinite ? constraints.maxHeight : height,
+            // Pass all the particle properties down to the canvas.
+            color: particleColor,
+            numberOfParticles: particleCount,
+            fadeDirection: fadeDirection,
+            particleRadius: particleRadius,
+            minHorizontalVelocity: minHorizontalVelocity,
+            maxHorizontalVelocity: maxHorizontalVelocity,
+            minVerticalVelocity: minVerticalVelocity,
+            maxVerticalVelocity: maxVerticalVelocity,
+          ),
+        );
+
         return Stack(
           alignment: childAlignment,
-          children: [
-            // The background layer (bottom of the stack)
-            // ClipRRect ensures the particle canvas doesn't draw outside
-            // its bounds, which can happen with particle wrapping.
-            ClipRRect(
-              child: ParticleCanvas(
-                // If the user provided a finite width, use it.
-                // Otherwise, use the maxWidth from the LayoutBuilder.
-                width: width.isInfinite ? constraints.maxWidth : width,
-                // If the user provided a finite height, use it.
-                // Otherwise, use the maxHeight from the LayoutBuilder.
-                height: height.isInfinite ? constraints.maxHeight : height,
-                // Pass all the particle properties down to the canvas.
-                color: particleColor,
-                numberOfParticles: particleCount,
-                fadeDirection: fadeDirection,
-                particleRadius: particleRadius,
-                minHorizontalVelocity: minHorizontalVelocity,
-                maxHorizontalVelocity: maxHorizontalVelocity,
-                minVerticalVelocity: minVerticalVelocity,
-                maxVerticalVelocity: maxVerticalVelocity,
-              ),
-            ),
-            // The foreground layer (top of the stack)
-            child,
-          ],
+          children: particlesInFront
+              ? [child, particleCanvas]
+              : [particleCanvas, child],
         );
       },
     );

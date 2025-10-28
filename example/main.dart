@@ -40,85 +40,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool _particlesInFront = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: AtmosphericParticles(
-                  fadeDirection: FadeDirection.top,
-                  childAlignment: AlignmentGeometry.center,
-                  child: Text(
-                    'Fade from Top',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Particles in Front'),
+                    Switch(
+                      value: _particlesInFront,
+                      onChanged: (value) {
+                        setState(() {
+                          _particlesInFront = value;
+                        });
+                      },
                     ),
-                  ),
+                  ],
                 ),
-              ),
-              const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: AtmosphericParticles(
-                  fadeDirection: FadeDirection.bottom,
-                  particleColor: Colors.amber,
-                  childAlignment: AlignmentGeometry.center,
-                  child: Text(
-                    'Fade from Bottom',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: AtmosphericParticles(
-                  fadeDirection: FadeDirection.left,
-                  particleColor: Colors.lightBlue,
-                  childAlignment: AlignmentGeometry.center,
-                  child: Text(
-                    'Fade from Left',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: AtmosphericParticles(
-                  fadeDirection: FadeDirection.right,
-                  particleColor: Colors.lightGreen,
-                  childAlignment: AlignmentGeometry.center,
-                  child: Text(
-                    'Fade from Right',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-              ),
-              for (int i = 0; i < 15; i++)
                 SizedBox(
                   height: 100,
                   width: double.infinity,
                   child: AtmosphericParticles(
-                    particleColor: colors[i % colors.length],
+                    fadeDirection: FadeDirection.top,
                     childAlignment: AlignmentGeometry.center,
+                    particlesInFront: _particlesInFront,
                     child: const Text(
-                      'Hello world!',
+                      'Fade from Top',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w400,
@@ -126,7 +80,72 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
-            ],
+                const SizedBox(
+                  height: 100,
+                  width: double.infinity,
+                  child: AtmosphericParticles(
+                    fadeDirection: FadeDirection.bottom,
+                    particleColor: Colors.amber,
+                    childAlignment: AlignmentGeometry.center,
+                    child: Text(
+                      'Fade from Bottom',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 100,
+                  width: double.infinity,
+                  child: AtmosphericParticles(
+                    fadeDirection: FadeDirection.left,
+                    particleColor: Colors.lightBlue,
+                    childAlignment: AlignmentGeometry.center,
+                    child: Text(
+                      'Fade from Left',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 100,
+                  width: double.infinity,
+                  child: AtmosphericParticles(
+                    fadeDirection: FadeDirection.right,
+                    particleColor: Colors.lightGreen,
+                    childAlignment: AlignmentGeometry.center,
+                    child: Text(
+                      'Fade from Right',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ),
+                ),
+                for (int i = 0; i < 15; i++)
+                  SizedBox(
+                    height: 100,
+                    width: double.infinity,
+                    child: AtmosphericParticles(
+                      particleColor: colors[i % colors.length],
+                      childAlignment: AlignmentGeometry.center,
+                      child: const Text(
+                        'Hello world!',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
