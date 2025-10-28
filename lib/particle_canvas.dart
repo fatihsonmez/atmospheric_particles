@@ -1,10 +1,12 @@
+import 'dart:isolate';
 import 'dart:math';
 
 import 'package:atmospheric_particles/fade_direction.dart';
+import 'package:atmospheric_particles/isolate_message.dart';
 import 'package:atmospheric_particles/particle.dart';
+import 'package:atmospheric_particles/particle_isolate.dart';
 import 'package:atmospheric_particles/particle_painter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart'; // Import for Ticker
 
 /// A [StatefulWidget] that renders an animated canvas of moving particles.
 ///
@@ -20,9 +22,9 @@ class ParticleCanvas extends StatefulWidget {
     required this.maxHorizontalVelocity,
     required this.minVerticalVelocity,
     required this.maxVerticalVelocity,
-    super.key,
     required this.numberOfParticles,
     required this.particleRadius,
+    super.key,
   })  : // Use assertions in the initializer list to validate inputs
         assert(
           minHorizontalVelocity <= maxHorizontalVelocity,
@@ -73,27 +75,29 @@ class ParticleCanvas extends StatefulWidget {
 
 /// The [State] class for [ParticleCanvas].
 ///
-/// It uses a [SingleTickerProviderStateMixin] to create and manage a [Ticker]
-/// for driving the animation loop.
-class _ParticleCanvasState extends State<ParticleCanvas>
-    with SingleTickerProviderStateMixin {
+/// It uses a long-lived Isolate to offload the animation logic and keep the UI
+/// thread free.
+class _ParticleCanvasState extends State<ParticleCanvas> {
   /// The list of [Particle] objects currently being animated.
   List<Particle> particles = [];
 
   /// A random number generator for initializing particle positions and velocities.
   final Random _random = Random();
 
-  /// The [Ticker] that calls the [_animationLoop] on every frame.
-  late Ticker _ticker;
+  /// The isolate where the particle animation logic runs.
+  Isolate? _isolate;
 
-  /// The timestamp of the last animation frame.
-  /// Used to calculate `deltaTime` for frame-rate independent animation.
-  Duration _lastTick = Duration.zero;
+  /// The port to receive messages from the isolate.
+  final _receivePort = ReceivePort();
+
+  /// The port to send messages to the isolate.
+  SendPort? _sendPort;
 
   /// Clean up resources when the widget is removed from the tree.
   @override
   void dispose() {
-    _ticker.dispose(); // Stop the ticker to prevent memory leaks
+    _isolate?.kill(priority: Isolate.immediate);
+    _receivePort.close();
     super.dispose();
   }
 
@@ -101,73 +105,31 @@ class _ParticleCanvasState extends State<ParticleCanvas>
   @override
   void initState() {
     super.initState();
-    // Create the initial set of particles
-    _initializeParticles(Size(widget.width, widget.height));
-
-    // Create a ticker that will call our _animationLoop method
-    _ticker = createTicker(_animationLoop);
-
-    // Start the animation
-    _ticker.start();
+    _spawnIsolate();
   }
 
-  /// Called when the widget's configuration changes (e.g., parent rebuilds).
-  @override
-  void didUpdateWidget(ParticleCanvas oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    bool shouldReinitialize = false;
-
-    // Check if properties that require a full reset have changed.
-    if (widget.width != oldWidget.width ||
-        widget.height != oldWidget.height ||
-        widget.numberOfParticles != oldWidget.numberOfParticles) {
-      shouldReinitialize = true;
-    }
-
-    if (shouldReinitialize) {
-      // Re-create all particles if size or count changes.
-      _initializeParticles(Size(widget.width, widget.height));
-    } else if (widget.color != oldWidget.color) {
-      // If only the color changed, just update existing particles.
-      // This is more efficient than a full re-initialization.
-      _updateParticleColors();
-    }
+  void _spawnIsolate() async {
+    _isolate?.kill(priority: Isolate.immediate);
+    final receivePort = ReceivePort();
+    _isolate = await Isolate.spawn(particleIsolate, receivePort.sendPort);
+    receivePort.listen((message) {
+      if (message is SendPort) {
+        _sendPort = message;
+        // Once we have the send port, we can initialize the particles
+        // and send them to the isolate.
+        _initializeAndSendParticles();
+      } else if (message is List<Particle>) {
+        // When we receive a new list of particles from the isolate,
+        // we update the state to trigger a repaint.
+        setState(() {
+          particles = message;
+        });
+      }
+    });
   }
 
-  /// The main animation callback, called by the [Ticker] on each frame.
-  void _animationLoop(Duration elapsed) {
-    // Calculate the time elapsed since the last frame (in seconds).
-    final double deltaTime =
-        (elapsed.inMicroseconds - _lastTick.inMicroseconds) /
-            Duration.microsecondsPerSecond;
-    _lastTick = elapsed; // Store the time for the next frame
-
-    // Update particle positions based on delta time
-    _updateParticles(deltaTime);
-
-    // Mark the widget as dirty to trigger a repaint (call build method)
-    setState(() {});
-  }
-
-  /// Renders the widget.
-  @override
-  Widget build(BuildContext context) {
-    // Use a SizedBox to enforce the dimensions
-    return SizedBox(
-      width: widget.width,
-      height: widget.height,
-      // CustomPaint widget uses our ParticlePainter to draw
-      child: CustomPaint(
-        painter: ParticlePainter(
-          particles: particles,
-          fadeDirection: widget.fadeDirection,
-        ),
-      ),
-    );
-  }
-
-  /// Creates and initializes the `particles` list.
-  void _initializeParticles(Size size) {
+  void _initializeAndSendParticles() {
+    final size = Size(widget.width, widget.height);
     particles = List.generate(widget.numberOfParticles, (index) {
       return Particle(
         // Give a random position within the canvas bounds
@@ -189,44 +151,47 @@ class _ParticleCanvasState extends State<ParticleCanvas>
         ),
       );
     });
+    _sendPort?.send(IsolateMessage(particles: particles, size: size));
   }
 
-  /// Updates the position of each particle for the current frame.
-  ///
-  /// [deltaTime] is the time in seconds since the last frame.
-  void _updateParticles(double deltaTime) {
-    final size = Size(widget.width, widget.height);
+  /// Called when the widget's configuration changes (e.g., parent rebuilds).
+  @override
+  void didUpdateWidget(ParticleCanvas oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    bool shouldReinitialize = false;
 
-    for (final p in particles) {
-      // Calculate the new position based on velocity and delta time.
-      // This makes the animation speed independent of the frame rate.
-      Offset newPosition = p.position + (p.velocity * deltaTime);
-
-      // --- Boundary Handling (Wrapping) ---
-      // This logic makes particles reappear on the opposite side
-      // when they go off-screen.
-
-      // Horizontal wrapping
-      if (newPosition.dx + p.radius < 0) {
-        // Went off the left edge, wrap to the right edge
-        newPosition = Offset(size.width + p.radius, newPosition.dy);
-      } else if (newPosition.dx - p.radius > size.width) {
-        // Went off the right edge, wrap to the left edge
-        newPosition = Offset(-p.radius, newPosition.dy);
-      }
-
-      // Vertical wrapping
-      if (newPosition.dy + p.radius < 0) {
-        // Went off the top edge, wrap to the bottom edge
-        newPosition = Offset(newPosition.dx, size.height + p.radius);
-      } else if (newPosition.dy - p.radius > size.height) {
-        // Went off the bottom edge, wrap to the top edge
-        newPosition = Offset(newPosition.dx, -p.radius);
-      }
-
-      // Apply the updated position to the particle
-      p.position = newPosition;
+    // Check if properties that require a full reset have changed.
+    if (widget.width != oldWidget.width ||
+        widget.height != oldWidget.height ||
+        widget.numberOfParticles != oldWidget.numberOfParticles) {
+      shouldReinitialize = true;
     }
+
+    if (shouldReinitialize) {
+      // Re-create all particles if size or count changes.
+      _initializeAndSendParticles();
+    } else if (widget.color != oldWidget.color) {
+      // If only the color changed, just update existing particles.
+      // This is more efficient than a full re-initialization.
+      _updateParticleColors();
+    }
+  }
+
+  /// Renders the widget.
+  @override
+  Widget build(BuildContext context) {
+    // Use a SizedBox to enforce the dimensions
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      // CustomPaint widget uses our ParticlePainter to draw
+      child: CustomPaint(
+        painter: ParticlePainter(
+          particles: particles,
+          fadeDirection: widget.fadeDirection,
+        ),
+      ),
+    );
   }
 
   /// Efficiently updates the color of all existing particles.
@@ -235,5 +200,11 @@ class _ParticleCanvasState extends State<ParticleCanvas>
     for (final p in particles) {
       p.color = widget.color;
     }
+    _sendPort?.send(
+      IsolateMessage(
+        particles: particles,
+        size: Size(widget.width, widget.height),
+      ),
+    );
   }
 }
