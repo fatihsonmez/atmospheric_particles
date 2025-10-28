@@ -1,3 +1,12 @@
+## [0.2.0]
+
+#### Added
+* Implemented isolate-based animation for improved performance.
+* Added a basic test suite for the `AtmosphericParticles` widget.
+
+#### Changed
+* Refactored the `ParticleCanvas` to use a long-lived isolate for the animation logic.
+
 ## [0.1.0]
 
 #### Added
