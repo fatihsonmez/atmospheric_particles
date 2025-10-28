@@ -13,6 +13,7 @@ A lightweight, highly customizable Flutter package for creating beautiful partic
 
 * **Highly Customizable:** Control particle color, size, count, and speed.
 * **Directional Control:** Set minimum and maximum velocities for both horizontal and vertical axes.
+* **Directional Fade:** Apply a fade effect from the top, bottom, left, or right.
 * **Lightweight:** Simple and efficient, designed to wrap any widget without performance issues.
 * **Easy to Use:** Get started immediately with beautiful default parameters.
 
@@ -24,7 +25,7 @@ Add the package to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  atmospheric_particles: ^0.0.1 
+  atmospheric_particles: ^0.1.0
 ````
 
 Or, run this command in your terminal:
@@ -39,6 +40,7 @@ Import the package into your Dart file:
 
 ```dart
 import 'package:atmospheric_particles/atmospheric_particles.dart';
+import 'package:atmospheric_particles/fade_direction.dart';
 ```
 
 ## Usage
@@ -80,21 +82,21 @@ List<Color> colors = [
 ];
 
 // ... inside your build method
-for(int i = 0; i < 10; i++)
-    SizedBox(
-        height: 50,
-        width: double.infinity,
-        child: AtmosphericParticles(
-            particleColor: colors[i % colors.length],
-            particleRadius: 3,
-            particleCount: 100,
-            minVerticalVelocity: -30,
-            maxVerticalVelocity: -10,
-            minHorizontalVelocity: -30,
-            maxHorizontalVelocity: -10,
-            child: const Center(child: Text('Customized Particles')),
-        ),
-    ),
+SizedBox(
+  height: 100,
+  width: double.infinity,
+  child: AtmosphericParticles(
+    particleColor: Colors.blue,
+    particleRadius: 3,
+    particleCount: 100,
+    fadeDirection: FadeDirection.bottom,
+    minVerticalVelocity: -30,
+    maxVerticalVelocity: -10,
+    minHorizontalVelocity: -30,
+    maxHorizontalVelocity: -10,
+    child: const Center(child: Text('Customized Particles')),
+  ),
+),
 ```
 
 ## Widget Properties (API)
@@ -102,6 +104,7 @@ for(int i = 0; i < 10; i++)
 | Property | Type | Description |
 | :--- | :--- | :--- |
 | **`child`** | `Widget` | The widget to display in front of the particle field. |
+| **`fadeDirection`** | `FadeDirection` | The direction of the opacity gradient. Can be `FadeDirection.top`, `bottom`, `left`, `right`, or `none`. Defaults to `FadeDirection.none`. |
 | **`particleColor`** | `Color` | The color of the particles. Defaults to `Colors.purple` with opacity. |
 | **`particleCount`** | `int` | The total number of particles to render. Defaults to `200`. |
 | **`particleRadius`** | `double` | The radius of each particle. Defaults to `2`. |

@@ -1,3 +1,6 @@
+export 'fade_direction.dart';
+
+import 'package:atmospheric_particles/fade_direction.dart';
 import 'package:atmospheric_particles/particle_canvas.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +21,7 @@ class AtmosphericParticles extends StatelessWidget {
     super.key,
     this.childAlignment = AlignmentGeometry.topCenter,
     this.height = double.infinity,
-    this.enableVerticalFade = true,
+    this.fadeDirection = FadeDirection.none,
     this.maxHorizontalVelocity = 30,
     this.minHorizontalVelocity = 10,
     this.maxVerticalVelocity = -20,
@@ -36,9 +39,9 @@ class AtmosphericParticles extends StatelessWidget {
   /// Defaults to [AlignmentGeometry.topCenter].
   final AlignmentGeometry childAlignment;
 
-  /// If true, particles will fade in (increase opacity) as they move
-  /// down the canvas. Passed to [ParticleCanvas].
-  final bool enableVerticalFade;
+  /// The direction of the fade effect for the particles.
+  /// Defaults to [FadeDirection.none].
+  final FadeDirection fadeDirection;
 
   /// The base color of the particles.
   final Color particleColor;
@@ -99,7 +102,7 @@ class AtmosphericParticles extends StatelessWidget {
                 // Pass all the particle properties down to the canvas.
                 color: particleColor,
                 numberOfParticles: particleCount,
-                enableVerticalFade: enableVerticalFade,
+                fadeDirection: fadeDirection,
                 particleRadius: particleRadius,
                 minHorizontalVelocity: minHorizontalVelocity,
                 maxHorizontalVelocity: maxHorizontalVelocity,

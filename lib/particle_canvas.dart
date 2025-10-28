@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:atmospheric_particles/fade_direction.dart';
 import 'package:atmospheric_particles/particle.dart';
 import 'package:atmospheric_particles/particle_painter.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class ParticleCanvas extends StatefulWidget {
     required this.height,
     required this.width,
     required this.color,
-    required this.enableVerticalFade,
+    required this.fadeDirection,
     required this.minHorizontalVelocity,
     required this.maxHorizontalVelocity,
     required this.minVerticalVelocity,
@@ -46,9 +47,8 @@ class ParticleCanvas extends StatefulWidget {
   /// The total number of particles to create and animate.
   final int numberOfParticles;
 
-  /// If true, particles will fade in as they move down the canvas.
-  /// Passed to the [ParticlePainter].
-  final bool enableVerticalFade;
+  /// The direction of the fade effect.
+  final FadeDirection fadeDirection;
 
   /// The radius (size) of each particle.
   final double particleRadius;
@@ -160,7 +160,7 @@ class _ParticleCanvasState extends State<ParticleCanvas>
       child: CustomPaint(
         painter: ParticlePainter(
           particles: particles,
-          enableVerticalFade: widget.enableVerticalFade,
+          fadeDirection: widget.fadeDirection,
         ),
       ),
     );

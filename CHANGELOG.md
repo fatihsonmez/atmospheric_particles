@@ -1,10 +1,18 @@
+## [0.1.0]
+
+#### Added
+* Introduced the `FadeDirection` enum (`top`, `bottom`, `left`, `right`, `none`) to control the direction of the particle opacity gradient.
+
+#### Changed
+* **Breaking Change:** Replaced the `enableVerticalFade` boolean property with the `fadeDirection` property to allow for more flexible fade effects.
+
 ## [0.0.3] 
 
-# Added
+#### Added
 * Added the `repository` field to `pubspec.yaml` to link directly to the GitHub source code.
 * Integrated a direct **GitHub link** and documentation link into the `README.md` file.
 
-# Changed
+#### Changed
 * Significantly **extended the package `description`** in `pubspec.yaml` to better explain the package's purpose.
 
 ## [0.0.2]

@@ -47,6 +47,69 @@ class _MyHomePageState extends State<MyHomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              const SizedBox(
+                height: 100,
+                width: double.infinity,
+                child: AtmosphericParticles(
+                  fadeDirection: FadeDirection.top,
+                  childAlignment: AlignmentGeometry.center,
+                  child: Text(
+                    'Fade from Top',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 100,
+                width: double.infinity,
+                child: AtmosphericParticles(
+                  fadeDirection: FadeDirection.bottom,
+                  particleColor: Colors.amber,
+                  childAlignment: AlignmentGeometry.center,
+                  child: Text(
+                    'Fade from Bottom',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 100,
+                width: double.infinity,
+                child: AtmosphericParticles(
+                  fadeDirection: FadeDirection.left,
+                  particleColor: Colors.lightBlue,
+                  childAlignment: AlignmentGeometry.center,
+                  child: Text(
+                    'Fade from Left',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 100,
+                width: double.infinity,
+                child: AtmosphericParticles(
+                  fadeDirection: FadeDirection.right,
+                  particleColor: Colors.lightGreen,
+                  childAlignment: AlignmentGeometry.center,
+                  child: Text(
+                    'Fade from Right',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
               for (int i = 0; i < 15; i++)
                 SizedBox(
                   height: 100,
