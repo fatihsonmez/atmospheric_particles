@@ -4,6 +4,7 @@ import 'package:atmospheric_particles/src/particle_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:atmospheric_particles/atmospheric_particles.dart';
+import 'package:atmospheric_particles/src/particle_canvas.dart';
 
 void main() {
   testWidgets('AtmosphericParticles renders without errors', (tester) async {
@@ -103,5 +104,27 @@ void main() {
     // When particlesInFront is false, ParticleCanvas should be before the child
     expect(stack.children.first, isA<ClipRRect>()); // ClipRRect wraps ParticleCanvas
     expect(stack.children.last, isA<Text>());
+  });
+
+  testWidgets('trailLength is passed to ParticleCanvas', (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: AtmosphericParticles(
+            trailLength: 10,
+            child: Text('Child Widget'),
+          ),
+        ),
+      ),
+    );
+
+    final particleCanvasFinder = find.descendant(
+      of: find.byType(AtmosphericParticles),
+      matching: find.byType(ParticleCanvas),
+    );
+
+    final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
+
+    expect(particleCanvas.trailLength, 10);
   });
 }

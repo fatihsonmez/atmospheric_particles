@@ -14,7 +14,8 @@ class Particle {
     required this.color,
     required this.radius,
     required this.velocity,
-  });
+    required this.maxHistoryLength,
+  }) : history = [position];
 
   /// The current (x, y) coordinates of the particle on the canvas.
   Offset position;
@@ -30,4 +31,10 @@ class Particle {
   /// The [Offset.dx] controls horizontal speed and direction (negative for left, positive for right).
   /// The [Offset.dy] controls vertical speed and direction (negative for up, positive for down).
   Offset velocity;
+
+  /// A list of past positions to create a trail effect.
+  final List<Offset> history;
+
+  /// The maximum number of past positions to store for the trail.
+  final int maxHistoryLength;
 }

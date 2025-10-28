@@ -23,8 +23,8 @@ void main() {
     receivePort.listen((message) {
       if (message is SendPort) {
         sendPortCompleter.complete(message);
-      } else if (message is List<Particle>) {
-        particleUpdates.add(message);
+      } else if (message is List) {
+        particleUpdates.add(message.cast<Particle>());
       }
     });
 
@@ -36,6 +36,7 @@ void main() {
         velocity: const Offset(1, 1),
         color: Colors.red,
         radius: 1,
+        maxHistoryLength: 0,
       ),
     ];
     final message = IsolateMessage(particles: particles, size: const Size(100, 100));

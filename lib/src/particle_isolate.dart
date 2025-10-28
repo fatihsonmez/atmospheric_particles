@@ -38,6 +38,12 @@ void particleIsolate(SendPort sendPort) {
 
         if (particles.isNotEmpty) {
           for (final p in particles) {
+            // Add current position to history
+            p.history.add(p.position);
+            if (p.history.length > p.maxHistoryLength) {
+              p.history.removeAt(0);
+            }
+
             Offset newPosition = p.position + (p.velocity * deltaTime);
 
             if (newPosition.dx + p.radius < 0) {

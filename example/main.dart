@@ -41,6 +41,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool _particlesInFront = false;
+  int _trailLength = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +65,25 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Trail Length:'),
+                    Slider(
+                      value: _trailLength.toDouble(),
+                      min: 0,
+                      max: 50,
+                      divisions: 50,
+                      label: _trailLength.round().toString(),
+                      onChanged: (double value) {
+                        setState(() {
+                          _trailLength = value.toInt();
+                        });
+                      },
+                    ),
+                    Text(_trailLength.toString()),
+                  ],
+                ),
                 SizedBox(
                   height: 100,
                   width: double.infinity,
@@ -71,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     fadeDirection: FadeDirection.top,
                     childAlignment: AlignmentGeometry.center,
                     particlesInFront: _particlesInFront,
+                    trailLength: _trailLength,
                     child: const Text(
                       'Fade from Top',
                       style: TextStyle(
@@ -128,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
-                for (int i = 0; i < 15; i++)
+                for (int i = 0; i < 7; i++)
                   SizedBox(
                     height: 100,
                     width: double.infinity,

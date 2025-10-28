@@ -26,6 +26,7 @@ class ParticleCanvas extends StatefulWidget {
     required this.maxVerticalVelocity,
     required this.numberOfParticles,
     required this.particleRadius,
+    required this.trailLength,
     super.key,
   })  : // Use assertions in the initializer list to validate inputs
         assert(
@@ -62,6 +63,7 @@ class ParticleCanvas extends StatefulWidget {
   final double minHorizontalVelocity;
 
   /// The maximum horizontal speed (pixels per second).
+  /// Negative values move left, positive move right.
   final double maxHorizontalVelocity;
 
   /// The minimum vertical speed (pixels per second).
@@ -69,7 +71,11 @@ class ParticleCanvas extends StatefulWidget {
   final double minVerticalVelocity;
 
   /// The maximum vertical speed (pixels per second).
+  /// Negative values move up, positive move down.
   final double maxVerticalVelocity;
+
+  /// The length of the particle trails. A value of 0 means no trail.
+  final int trailLength;
 
   @override
   State<ParticleCanvas> createState() => _ParticleCanvasState();
@@ -164,6 +170,7 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
                   (widget.maxVerticalVelocity - widget.minVerticalVelocity) +
               widget.minVerticalVelocity,
         ),
+        maxHistoryLength: widget.trailLength,
       );
     });
     _sendPort?.send(IsolateMessage(particles: particles, size: size));

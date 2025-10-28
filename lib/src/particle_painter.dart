@@ -31,52 +31,45 @@ class ParticlePainter extends CustomPainter {
   /// Called by the Flutter framework to paint on the canvas.
   @override
   void paint(Canvas canvas, Size size) {
-    // If no fade effect is specified, draw all particles with the same color.
-    if (fadeDirection == FadeDirection.none) {
-      // Assume all particles have the same color for efficiency.
-      if (particles.isNotEmpty) {
-        _paint.color = particles[0].color;
-        for (final particle in particles) {
-          canvas.drawCircle(particle.position, particle.radius, _paint);
-        }
-      }
-      return;
-    }
-
-    // Loop through each particle to draw it individually with a fade effect.
     for (final particle in particles) {
-      double normalizedValue;
+      // Draw the trail
+      for (var i = 0; i < particle.history.length; i++) {
+        final historicalPosition = particle.history[i];
+        final opacity = (i / particle.history.length).clamp(0.0, 1.0);
 
-      // Calculate the normalized value based on the fade direction.
-      switch (fadeDirection) {
-        case FadeDirection.top:
-          normalizedValue =
-              particle.position.dy / (size.height == 0 ? 1 : size.height);
-          break;
-        case FadeDirection.bottom:
-          normalizedValue = 1.0 -
-              (particle.position.dy / (size.height == 0 ? 1 : size.height));
-          break;
-        case FadeDirection.left:
-          normalizedValue =
-              particle.position.dx / (size.width == 0 ? 1 : size.width);
-          break;
-        case FadeDirection.right:
-          normalizedValue =
-              1.0 - (particle.position.dx / (size.width == 0 ? 1 : size.width));
-          break;
-        case FadeDirection.none:
-          normalizedValue = 1.0; // Should not happen due to the check above
-          break;
+        _paint.color = particle.color.withAlpha((opacity * 255).toInt());
+        canvas.drawCircle(historicalPosition, particle.radius, _paint);
       }
 
-      // Calculate the alpha (opacity) value.
-      final alpha = (normalizedValue.clamp(0.0, 1.0) * 255).toInt();
-
-      // Set the paint's color with the calculated alpha.
-      _paint.color = particle.color.withAlpha(alpha);
-
-      // Draw the particle as a circle.
+      // Draw the current particle position with full opacity or fade effect
+      if (fadeDirection == FadeDirection.none) {
+        _paint.color = particle.color;
+      } else {
+        double normalizedValue;
+        switch (fadeDirection) {
+          case FadeDirection.top:
+            normalizedValue =
+                particle.position.dy / (size.height == 0 ? 1 : size.height);
+            break;
+          case FadeDirection.bottom:
+            normalizedValue = 1.0 -
+                (particle.position.dy / (size.height == 0 ? 1 : size.height));
+            break;
+          case FadeDirection.left:
+            normalizedValue =
+                particle.position.dx / (size.width == 0 ? 1 : size.width);
+            break;
+          case FadeDirection.right:
+            normalizedValue = 1.0 -
+                (particle.position.dx / (size.width == 0 ? 1 : size.width));
+            break;
+          case FadeDirection.none:
+            normalizedValue = 1.0;
+            break;
+        }
+        final alpha = (normalizedValue.clamp(0.0, 1.0) * 255).toInt();
+        _paint.color = particle.color.withAlpha(alpha);
+      }
       canvas.drawCircle(particle.position, particle.radius, _paint);
     }
   }
