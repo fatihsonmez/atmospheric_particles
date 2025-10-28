@@ -1,3 +1,8 @@
+## [0.2.4]
+
+#### Added
+* Added `particleShape` property to `AtmosphericParticles` to allow customization of particle shapes (circle, square, triangle, oval, rrect).
+
 ## [0.2.3]
 
 #### Added
