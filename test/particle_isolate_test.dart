@@ -39,7 +39,8 @@ void main() {
         maxHistoryLength: 0,
       ),
     ];
-    final message = IsolateMessage(particles: particles, size: const Size(100, 100));
+    final message =
+        IsolateMessage(particles: particles, size: const Size(100, 100));
 
     sendPort.send(message);
 

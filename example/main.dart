@@ -42,6 +42,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool _particlesInFront = false;
   int _trailLength = 0;
+  ParticleShape _particleShape = ParticleShape.circle;
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +85,30 @@ class _MyHomePageState extends State<MyHomePage> {
                     Text(_trailLength.toString()),
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Particle Shape:'),
+                    DropdownButton<ParticleShape>(
+                      value: _particleShape,
+                      onChanged: (ParticleShape? newValue) {
+                        if (newValue != null) {
+                          setState(() {
+                            _particleShape = newValue;
+                          });
+                        }
+                      },
+                      items: ParticleShape.values
+                          .map<DropdownMenuItem<ParticleShape>>(
+                              (ParticleShape value) {
+                        return DropdownMenuItem<ParticleShape>(
+                          value: value,
+                          child: Text(value.toString().split('.').last),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
                 SizedBox(
                   height: 100,
                   width: double.infinity,
@@ -92,6 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     childAlignment: AlignmentGeometry.center,
                     particlesInFront: _particlesInFront,
                     trailLength: _trailLength,
+                    particleShape: _particleShape,
                     child: const Text(
                       'Fade from Top',
                       style: TextStyle(

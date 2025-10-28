@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:atmospheric_particles/src/fade_direction.dart';
 import 'package:atmospheric_particles/src/particle.dart';
+import 'package:atmospheric_particles/src/particle_shape.dart';
 
 /// A [CustomPainter] responsible for drawing a list of [Particle] objects
 /// onto a [Canvas].
@@ -16,6 +17,7 @@ class ParticlePainter extends CustomPainter {
   ParticlePainter({
     required this.particles,
     this.fadeDirection = FadeDirection.none,
+    this.particleShape = ParticleShape.circle,
   });
 
   /// The list of [Particle] objects to be drawn.
@@ -23,6 +25,9 @@ class ParticlePainter extends CustomPainter {
 
   /// The direction of the fade effect.
   final FadeDirection fadeDirection;
+
+  /// The shape of the particles.
+  final ParticleShape particleShape;
 
   /// A reusable [Paint] object to configure how circles are drawn.
   /// Its color is set dynamically within the `paint` method.
@@ -38,7 +43,7 @@ class ParticlePainter extends CustomPainter {
         final opacity = (i / particle.history.length).clamp(0.0, 1.0);
 
         _paint.color = particle.color.withAlpha((opacity * 255).toInt());
-        canvas.drawCircle(historicalPosition, particle.radius, _paint);
+        _drawShape(canvas, historicalPosition, particle.radius, particleShape);
       }
 
       // Draw the current particle position with full opacity or fade effect
@@ -70,7 +75,49 @@ class ParticlePainter extends CustomPainter {
         final alpha = (normalizedValue.clamp(0.0, 1.0) * 255).toInt();
         _paint.color = particle.color.withAlpha(alpha);
       }
-      canvas.drawCircle(particle.position, particle.radius, _paint);
+      _drawShape(canvas, particle.position, particle.radius, particleShape);
+    }
+  }
+
+  void _drawShape(
+    Canvas canvas,
+    Offset position,
+    double radius,
+    ParticleShape shape,
+  ) {
+    switch (shape) {
+      case ParticleShape.circle:
+        canvas.drawCircle(position, radius, _paint);
+        break;
+      case ParticleShape.square:
+        canvas.drawRect(
+          Rect.fromCircle(center: position, radius: radius),
+          _paint,
+        );
+        break;
+      case ParticleShape.triangle:
+        final path = Path();
+        path.moveTo(position.dx, position.dy - radius);
+        path.lineTo(position.dx + radius, position.dy + radius);
+        path.lineTo(position.dx - radius, position.dy + radius);
+        path.close();
+        canvas.drawPath(path, _paint);
+        break;
+      case ParticleShape.oval:
+        canvas.drawOval(
+          Rect.fromCircle(center: position, radius: radius),
+          _paint,
+        );
+        break;
+      case ParticleShape.rrect:
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromCircle(center: position, radius: radius),
+            Radius.circular(radius / 4),
+          ),
+          _paint,
+        );
+        break;
     }
   }
 

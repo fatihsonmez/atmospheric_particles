@@ -78,7 +78,8 @@ void main() {
 
     // When particlesInFront is true, ParticleCanvas should be after the child
     expect(stack.children.first, isA<Text>());
-    expect(stack.children.last, isA<ClipRRect>()); // ClipRRect wraps ParticleCanvas
+    expect(stack.children.last,
+        isA<ClipRRect>()); // ClipRRect wraps ParticleCanvas
   });
 
   testWidgets(
@@ -102,7 +103,8 @@ void main() {
     final stack = tester.widget<Stack>(stackFinder);
 
     // When particlesInFront is false, ParticleCanvas should be before the child
-    expect(stack.children.first, isA<ClipRRect>()); // ClipRRect wraps ParticleCanvas
+    expect(stack.children.first,
+        isA<ClipRRect>()); // ClipRRect wraps ParticleCanvas
     expect(stack.children.last, isA<Text>());
   });
 
@@ -126,5 +128,94 @@ void main() {
     final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
 
     expect(particleCanvas.trailLength, 10);
+  });
+
+  testWidgets('particleShape is passed to ParticleCanvas and ParticlePainter',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: AtmosphericParticles(
+            particleShape: ParticleShape.square,
+            child: Text('Child Widget'),
+          ),
+        ),
+      ),
+    );
+
+    final particleCanvasFinder = find.descendant(
+      of: find.byType(AtmosphericParticles),
+      matching: find.byType(ParticleCanvas),
+    );
+    final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
+    expect(particleCanvas.particleShape, ParticleShape.square);
+
+    final customPaintFinder = find.descendant(
+      of: find.byType(AtmosphericParticles),
+      matching: find.byType(CustomPaint),
+    );
+    final customPaint = tester.widget<CustomPaint>(customPaintFinder);
+    final painter = customPaint.painter as ParticlePainter;
+    expect(painter.particleShape, ParticleShape.square);
+  });
+
+  testWidgets(
+      'particleShape oval is passed to ParticleCanvas and ParticlePainter',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: AtmosphericParticles(
+            particleShape: ParticleShape.oval,
+            child: Text('Child Widget'),
+          ),
+        ),
+      ),
+    );
+
+    final particleCanvasFinder = find.descendant(
+      of: find.byType(AtmosphericParticles),
+      matching: find.byType(ParticleCanvas),
+    );
+    final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
+    expect(particleCanvas.particleShape, ParticleShape.oval);
+
+    final customPaintFinder = find.descendant(
+      of: find.byType(AtmosphericParticles),
+      matching: find.byType(CustomPaint),
+    );
+    final customPaint = tester.widget<CustomPaint>(customPaintFinder);
+    final painter = customPaint.painter as ParticlePainter;
+    expect(painter.particleShape, ParticleShape.oval);
+  });
+
+  testWidgets(
+      'particleShape rrect is passed to ParticleCanvas and ParticlePainter',
+      (tester) async {
+    await tester.pumpWidget(
+      const MaterialApp(
+        home: Scaffold(
+          body: AtmosphericParticles(
+            particleShape: ParticleShape.rrect,
+            child: Text('Child Widget'),
+          ),
+        ),
+      ),
+    );
+
+    final particleCanvasFinder = find.descendant(
+      of: find.byType(AtmosphericParticles),
+      matching: find.byType(ParticleCanvas),
+    );
+    final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
+    expect(particleCanvas.particleShape, ParticleShape.rrect);
+
+    final customPaintFinder = find.descendant(
+      of: find.byType(AtmosphericParticles),
+      matching: find.byType(CustomPaint),
+    );
+    final customPaint = tester.widget<CustomPaint>(customPaintFinder);
+    final painter = customPaint.painter as ParticlePainter;
+    expect(painter.particleShape, ParticleShape.rrect);
   });
 }

@@ -9,6 +9,7 @@ import 'package:atmospheric_particles/src/isolate_message.dart';
 import 'package:atmospheric_particles/src/particle.dart';
 import 'package:atmospheric_particles/src/particle_isolate.dart';
 import 'package:atmospheric_particles/src/particle_painter.dart';
+import 'package:atmospheric_particles/src/particle_shape.dart';
 
 /// A [StatefulWidget] that renders an animated canvas of moving particles.
 ///
@@ -27,6 +28,7 @@ class ParticleCanvas extends StatefulWidget {
     required this.numberOfParticles,
     required this.particleRadius,
     required this.trailLength,
+    this.particleShape = ParticleShape.circle,
     super.key,
   })  : // Use assertions in the initializer list to validate inputs
         assert(
@@ -76,6 +78,10 @@ class ParticleCanvas extends StatefulWidget {
 
   /// The length of the particle trails. A value of 0 means no trail.
   final int trailLength;
+
+  /// The shape of the particles.
+  /// Defaults to [ParticleShape.circle].
+  final ParticleShape particleShape;
 
   @override
   State<ParticleCanvas> createState() => _ParticleCanvasState();
@@ -171,6 +177,7 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
               widget.minVerticalVelocity,
         ),
         maxHistoryLength: widget.trailLength,
+        shape: widget.particleShape,
       );
     });
     _sendPort?.send(IsolateMessage(particles: particles, size: size));
@@ -211,6 +218,7 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
         painter: ParticlePainter(
           particles: particles,
           fadeDirection: widget.fadeDirection,
+          particleShape: widget.particleShape,
         ),
       ),
     );

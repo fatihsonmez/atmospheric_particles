@@ -1,8 +1,10 @@
 export 'src/fade_direction.dart';
+export 'src/particle_shape.dart';
 import 'package:flutter/material.dart';
 
 import 'package:atmospheric_particles/src/fade_direction.dart';
 import 'package:atmospheric_particles/src/particle_canvas.dart';
+import 'package:atmospheric_particles/src/particle_shape.dart';
 
 /// A user-friendly wrapper widget that displays an animated [ParticleCanvas]
 /// in the background and places a [child] widget on top of it.
@@ -32,6 +34,7 @@ class AtmosphericParticles extends StatelessWidget {
     this.width = double.infinity,
     this.particlesInFront = false,
     this.trailLength = 0,
+    this.particleShape = ParticleShape.circle,
   }) : assert(
           particleRadius > 0,
           'particleRadius must be bigger than 0',
@@ -53,6 +56,7 @@ class AtmosphericParticles extends StatelessWidget {
   final double height;
 
   /// The maximum horizontal speed of particles (pixels per second).
+  /// Negative values move up.
   final double maxHorizontalVelocity;
 
   /// The maximum vertical speed of particles (pixels per second).
@@ -87,6 +91,10 @@ class AtmosphericParticles extends StatelessWidget {
   /// The length of the particle trails. A value of 0 means no trail.
   final int trailLength;
 
+  /// The shape of the particles.
+  /// Defaults to [ParticleShape.circle].
+  final ParticleShape particleShape;
+
   @override
   Widget build(BuildContext context) {
     // Use LayoutBuilder to get the constraints (max width/height) from the parent.
@@ -111,6 +119,7 @@ class AtmosphericParticles extends StatelessWidget {
             minVerticalVelocity: minVerticalVelocity,
             maxVerticalVelocity: maxVerticalVelocity,
             trailLength: trailLength,
+            particleShape: particleShape,
           ),
         );
 

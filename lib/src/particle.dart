@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:atmospheric_particles/src/particle_shape.dart';
 
 /// Represents a single particle in the animation.
 ///
@@ -15,6 +16,7 @@ class Particle {
     required this.radius,
     required this.velocity,
     required this.maxHistoryLength,
+    this.shape = ParticleShape.circle,
   }) : history = [position];
 
   /// The current (x, y) coordinates of the particle on the canvas.
@@ -37,4 +39,7 @@ class Particle {
 
   /// The maximum number of past positions to store for the trail.
   final int maxHistoryLength;
+
+  /// The shape of the particle.
+  final ParticleShape shape;
 }
