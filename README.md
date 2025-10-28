@@ -112,6 +112,7 @@ SizedBox(
 | **`maxVerticalVelocity`** | `double` | The maximum *upward* speed. (Use negative values for upward motion). Defaults to `-20`. |
 | **`minHorizontalVelocity`** | `double` | The minimum *horizontal* speed. (Negative for left, positive for right). Defaults to `10`. |
 | **`maxHorizontalVelocity`** | `double` | The maximum *horizontal* speed. (Negative for left, positive for right). Defaults to `30`. |
+| **`particlesInFront`** | `bool` | Whether the particles should be rendered in front of the child widget. Defaults to `false`. |
 
 ## Additional Information
 

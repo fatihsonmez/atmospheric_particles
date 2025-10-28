@@ -1,3 +1,8 @@
+## [0.2.2]
+
+#### Added
+* Added `particlesInFront` property to `AtmosphericParticles` to control whether particles are rendered in front of or behind the child widget.
+
 ## [0.2.1]
 
 #### Fixed
