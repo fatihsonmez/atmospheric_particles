@@ -17,7 +17,6 @@ class ParticlePainter extends CustomPainter {
   ParticlePainter({
     required this.particles,
     this.fadeDirection = FadeDirection.none,
-    this.particleShape = ParticleShape.circle,
   });
 
   /// The list of [Particle] objects to be drawn.
@@ -25,9 +24,6 @@ class ParticlePainter extends CustomPainter {
 
   /// The direction of the fade effect.
   final FadeDirection fadeDirection;
-
-  /// The shape of the particles.
-  final ParticleShape particleShape;
 
   /// A reusable [Paint] object to configure how circles are drawn.
   /// Its color is set dynamically within the `paint` method.
@@ -43,7 +39,8 @@ class ParticlePainter extends CustomPainter {
         final opacity = (i / particle.history.length).clamp(0.0, 1.0);
 
         _paint.color = particle.color.withAlpha((opacity * 255).toInt());
-        _drawShape(canvas, historicalPosition, particle.radius, particleShape);
+        _drawShape(canvas, historicalPosition, particle.radius,
+            particle.shape ?? ParticleShape.circle);
       }
 
       // Draw the current particle position with full opacity or fade effect
@@ -75,7 +72,8 @@ class ParticlePainter extends CustomPainter {
         final alpha = (normalizedValue.clamp(0.0, 1.0) * 255).toInt();
         _paint.color = particle.color.withAlpha(alpha);
       }
-      _drawShape(canvas, particle.position, particle.radius, particleShape);
+      _drawShape(canvas, particle.position, particle.radius,
+          particle.shape ?? ParticleShape.circle);
     }
   }
 

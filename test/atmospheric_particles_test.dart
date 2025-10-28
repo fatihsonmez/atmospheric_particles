@@ -130,13 +130,13 @@ void main() {
     expect(particleCanvas.trailLength, 10);
   });
 
-  testWidgets('particleShape is passed to ParticleCanvas and ParticlePainter',
-      (tester) async {
+  testWidgets('minParticleRadius is passed to ParticleCanvas', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
           body: AtmosphericParticles(
-            particleShape: ParticleShape.square,
+            minParticleRadius: 5.0,
+            maxParticleRadius: 10.0,
             child: Text('Child Widget'),
           ),
         ),
@@ -147,26 +147,18 @@ void main() {
       of: find.byType(AtmosphericParticles),
       matching: find.byType(ParticleCanvas),
     );
-    final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
-    expect(particleCanvas.particleShape, ParticleShape.square);
 
-    final customPaintFinder = find.descendant(
-      of: find.byType(AtmosphericParticles),
-      matching: find.byType(CustomPaint),
-    );
-    final customPaint = tester.widget<CustomPaint>(customPaintFinder);
-    final painter = customPaint.painter as ParticlePainter;
-    expect(painter.particleShape, ParticleShape.square);
+    final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
+
+    expect(particleCanvas.minParticleRadius, 5.0);
   });
 
-  testWidgets(
-      'particleShape oval is passed to ParticleCanvas and ParticlePainter',
-      (tester) async {
+  testWidgets('maxParticleRadius is passed to ParticleCanvas', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
         home: Scaffold(
           body: AtmosphericParticles(
-            particleShape: ParticleShape.oval,
+            maxParticleRadius: 15.0,
             child: Text('Child Widget'),
           ),
         ),
@@ -177,45 +169,9 @@ void main() {
       of: find.byType(AtmosphericParticles),
       matching: find.byType(ParticleCanvas),
     );
+
     final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
-    expect(particleCanvas.particleShape, ParticleShape.oval);
 
-    final customPaintFinder = find.descendant(
-      of: find.byType(AtmosphericParticles),
-      matching: find.byType(CustomPaint),
-    );
-    final customPaint = tester.widget<CustomPaint>(customPaintFinder);
-    final painter = customPaint.painter as ParticlePainter;
-    expect(painter.particleShape, ParticleShape.oval);
-  });
-
-  testWidgets(
-      'particleShape rrect is passed to ParticleCanvas and ParticlePainter',
-      (tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: AtmosphericParticles(
-            particleShape: ParticleShape.rrect,
-            child: Text('Child Widget'),
-          ),
-        ),
-      ),
-    );
-
-    final particleCanvasFinder = find.descendant(
-      of: find.byType(AtmosphericParticles),
-      matching: find.byType(ParticleCanvas),
-    );
-    final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
-    expect(particleCanvas.particleShape, ParticleShape.rrect);
-
-    final customPaintFinder = find.descendant(
-      of: find.byType(AtmosphericParticles),
-      matching: find.byType(CustomPaint),
-    );
-    final customPaint = tester.widget<CustomPaint>(customPaintFinder);
-    final painter = customPaint.painter as ParticlePainter;
-    expect(painter.particleShape, ParticleShape.rrect);
+    expect(particleCanvas.maxParticleRadius, 15.0);
   });
 }

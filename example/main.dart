@@ -42,7 +42,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool _particlesInFront = false;
   int _trailLength = 0;
-  ParticleShape _particleShape = ParticleShape.circle;
+  double _minParticleRadius = 2;
+  double _maxParticleRadius = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -88,25 +89,45 @@ class _MyHomePageState extends State<MyHomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Particle Shape:'),
-                    DropdownButton<ParticleShape>(
-                      value: _particleShape,
-                      onChanged: (ParticleShape? newValue) {
-                        if (newValue != null) {
-                          setState(() {
-                            _particleShape = newValue;
-                          });
-                        }
+                    const Text('Min Particle Radius:'),
+                    Slider(
+                      value: _minParticleRadius,
+                      min: 0.1,
+                      max: 10.0,
+                      divisions: 99,
+                      label: _minParticleRadius.toStringAsFixed(1),
+                      onChanged: (double value) {
+                        setState(() {
+                          _minParticleRadius = value;
+                          if (_minParticleRadius > _maxParticleRadius) {
+                            _maxParticleRadius = _minParticleRadius;
+                          }
+                        });
                       },
-                      items: ParticleShape.values
-                          .map<DropdownMenuItem<ParticleShape>>(
-                              (ParticleShape value) {
-                        return DropdownMenuItem<ParticleShape>(
-                          value: value,
-                          child: Text(value.toString().split('.').last),
-                        );
-                      }).toList(),
                     ),
+                    Text(_minParticleRadius.toStringAsFixed(1)),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Max Particle Radius:'),
+                    Slider(
+                      value: _maxParticleRadius,
+                      min: 0.1,
+                      max: 10.0,
+                      divisions: 99,
+                      label: _maxParticleRadius.toStringAsFixed(1),
+                      onChanged: (double value) {
+                        setState(() {
+                          _maxParticleRadius = value;
+                          if (_maxParticleRadius < _minParticleRadius) {
+                            _minParticleRadius = _maxParticleRadius;
+                          }
+                        });
+                      },
+                    ),
+                    Text(_maxParticleRadius.toStringAsFixed(1)),
                   ],
                 ),
                 SizedBox(
@@ -117,7 +138,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     childAlignment: AlignmentGeometry.center,
                     particlesInFront: _particlesInFront,
                     trailLength: _trailLength,
-                    particleShape: _particleShape,
+                    minParticleRadius: _minParticleRadius,
+                    maxParticleRadius: _maxParticleRadius,
                     child: const Text(
                       'Fade from Top',
                       style: TextStyle(

@@ -9,7 +9,6 @@ import 'package:atmospheric_particles/src/isolate_message.dart';
 import 'package:atmospheric_particles/src/particle.dart';
 import 'package:atmospheric_particles/src/particle_isolate.dart';
 import 'package:atmospheric_particles/src/particle_painter.dart';
-import 'package:atmospheric_particles/src/particle_shape.dart';
 
 /// A [StatefulWidget] that renders an animated canvas of moving particles.
 ///
@@ -26,9 +25,9 @@ class ParticleCanvas extends StatefulWidget {
     required this.minVerticalVelocity,
     required this.maxVerticalVelocity,
     required this.numberOfParticles,
-    required this.particleRadius,
+    required this.minParticleRadius,
+    required this.maxParticleRadius,
     required this.trailLength,
-    this.particleShape = ParticleShape.circle,
     super.key,
   })  : // Use assertions in the initializer list to validate inputs
         assert(
@@ -38,6 +37,10 @@ class ParticleCanvas extends StatefulWidget {
         assert(
           minVerticalVelocity <= maxVerticalVelocity,
           'minVerticalVelocity must be less or equal to maxVerticalVelocity',
+        ),
+        assert(
+          minParticleRadius <= maxParticleRadius,
+          'minParticleRadius must be less or equal to maxParticleRadius',
         );
 
   // --- Widget Properties ---
@@ -57,8 +60,11 @@ class ParticleCanvas extends StatefulWidget {
   /// The direction of the fade effect.
   final FadeDirection fadeDirection;
 
-  /// The radius (size) of each particle.
-  final double particleRadius;
+  /// The minimum radius (size) of each particle.
+  final double minParticleRadius;
+
+  /// The maximum radius (size) of each particle.
+  final double maxParticleRadius;
 
   /// The minimum horizontal speed (pixels per second).
   /// Negative values move left, positive move right.
@@ -78,10 +84,6 @@ class ParticleCanvas extends StatefulWidget {
 
   /// The length of the particle trails. A value of 0 means no trail.
   final int trailLength;
-
-  /// The shape of the particles.
-  /// Defaults to [ParticleShape.circle].
-  final ParticleShape particleShape;
 
   @override
   State<ParticleCanvas> createState() => _ParticleCanvasState();
@@ -158,6 +160,9 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
   void _initializeAndSendParticles() {
     final size = Size(widget.width, widget.height);
     particles = List.generate(widget.numberOfParticles, (index) {
+      final radius = _random.nextDouble() *
+              (widget.maxParticleRadius - widget.minParticleRadius) +
+          widget.minParticleRadius;
       return Particle(
         // Give a random position within the canvas bounds
         position: Offset(
@@ -165,7 +170,7 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
           _random.nextDouble() * size.height,
         ),
         color: widget.color,
-        radius: widget.particleRadius,
+        radius: radius,
         // Calculate a random velocity within the specified min/max ranges
         velocity: Offset(
           _random.nextDouble() *
@@ -177,7 +182,6 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
               widget.minVerticalVelocity,
         ),
         maxHistoryLength: widget.trailLength,
-        shape: widget.particleShape,
       );
     });
     _sendPort?.send(IsolateMessage(particles: particles, size: size));
@@ -192,7 +196,9 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
     // Check if properties that require a full reset have changed.
     if (widget.width != oldWidget.width ||
         widget.height != oldWidget.height ||
-        widget.numberOfParticles != oldWidget.numberOfParticles) {
+        widget.numberOfParticles != oldWidget.numberOfParticles ||
+        widget.minParticleRadius != oldWidget.minParticleRadius ||
+        widget.maxParticleRadius != oldWidget.maxParticleRadius) {
       shouldReinitialize = true;
     }
 
@@ -218,7 +224,6 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
         painter: ParticlePainter(
           particles: particles,
           fadeDirection: widget.fadeDirection,
-          particleShape: widget.particleShape,
         ),
       ),
     );

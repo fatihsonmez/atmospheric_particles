@@ -1,10 +1,8 @@
 export 'src/fade_direction.dart';
-export 'src/particle_shape.dart';
 import 'package:flutter/material.dart';
 
 import 'package:atmospheric_particles/src/fade_direction.dart';
 import 'package:atmospheric_particles/src/particle_canvas.dart';
-import 'package:atmospheric_particles/src/particle_shape.dart';
 
 /// A user-friendly wrapper widget that displays an animated [ParticleCanvas]
 /// in the background and places a [child] widget on top of it.
@@ -30,14 +28,14 @@ class AtmosphericParticles extends StatelessWidget {
     this.minVerticalVelocity = -100,
     this.particleColor = Colors.deepPurple,
     this.particleCount = 200,
-    this.particleRadius = 2,
+    this.minParticleRadius = 2,
+    this.maxParticleRadius = 2,
     this.width = double.infinity,
     this.particlesInFront = false,
     this.trailLength = 0,
-    this.particleShape = ParticleShape.circle,
   }) : assert(
-          particleRadius > 0,
-          'particleRadius must be bigger than 0',
+          minParticleRadius > 0,
+          'minParticleRadius must be bigger than 0',
         );
 
   /// How the [child] widget is aligned within the [Stack].
@@ -56,7 +54,6 @@ class AtmosphericParticles extends StatelessWidget {
   final double height;
 
   /// The maximum horizontal speed of particles (pixels per second).
-  /// Negative values move up.
   final double maxHorizontalVelocity;
 
   /// The maximum vertical speed of particles (pixels per second).
@@ -71,8 +68,11 @@ class AtmosphericParticles extends StatelessWidget {
   /// Negative values move up.
   final double minVerticalVelocity;
 
-  /// The radius (size) of each particle. Must be greater than 0.
-  final double particleRadius;
+  /// The minimum radius (size) of each particle. Must be greater than 0.
+  final double minParticleRadius;
+
+  /// The maximum radius (size) of each particle. Must be greater than 0.
+  final double maxParticleRadius;
 
   /// The desired width of the particle canvas.
   /// Defaults to [double.infinity], which will fill the available horizontal space.
@@ -90,10 +90,6 @@ class AtmosphericParticles extends StatelessWidget {
 
   /// The length of the particle trails. A value of 0 means no trail.
   final int trailLength;
-
-  /// The shape of the particles.
-  /// Defaults to [ParticleShape.circle].
-  final ParticleShape particleShape;
 
   @override
   Widget build(BuildContext context) {
@@ -113,13 +109,13 @@ class AtmosphericParticles extends StatelessWidget {
             color: particleColor,
             numberOfParticles: particleCount,
             fadeDirection: fadeDirection,
-            particleRadius: particleRadius,
+            minParticleRadius: minParticleRadius,
+            maxParticleRadius: maxParticleRadius,
             minHorizontalVelocity: minHorizontalVelocity,
             maxHorizontalVelocity: maxHorizontalVelocity,
             minVerticalVelocity: minVerticalVelocity,
             maxVerticalVelocity: maxVerticalVelocity,
             trailLength: trailLength,
-            particleShape: particleShape,
           ),
         );
 

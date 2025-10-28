@@ -16,7 +16,8 @@ class Particle {
     required this.radius,
     required this.velocity,
     required this.maxHistoryLength,
-    this.shape = ParticleShape.circle,
+    this.shape,
+    this.image,
   }) : history = [position];
 
   /// The current (x, y) coordinates of the particle on the canvas.
@@ -40,6 +41,9 @@ class Particle {
   /// The maximum number of past positions to store for the trail.
   final int maxHistoryLength;
 
-  /// The shape of the particle.
-  final ParticleShape shape;
+  /// The shape of the particle. If null, and [image] is also null, defaults to [ParticleShape.circle].
+  final ParticleShape? shape;
+
+  /// The image to use for the particle. If provided, overrides [shape].
+  final ImageProvider? image;
 }
