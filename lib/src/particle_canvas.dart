@@ -1,12 +1,14 @@
+import 'dart:async';
 import 'dart:isolate';
 import 'dart:math';
 
-import 'package:atmospheric_particles/fade_direction.dart';
-import 'package:atmospheric_particles/isolate_message.dart';
-import 'package:atmospheric_particles/particle.dart';
-import 'package:atmospheric_particles/particle_isolate.dart';
-import 'package:atmospheric_particles/particle_painter.dart';
 import 'package:flutter/material.dart';
+
+import 'package:atmospheric_particles/src/fade_direction.dart';
+import 'package:atmospheric_particles/src/isolate_message.dart';
+import 'package:atmospheric_particles/src/particle.dart';
+import 'package:atmospheric_particles/src/particle_isolate.dart';
+import 'package:atmospheric_particles/src/particle_painter.dart';
 
 /// A [StatefulWidget] that renders an animated canvas of moving particles.
 ///
@@ -87,17 +89,23 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
   /// The isolate where the particle animation logic runs.
   Isolate? _isolate;
 
-  /// The port to receive messages from the isolate.
-  final _receivePort = ReceivePort();
-
   /// The port to send messages to the isolate.
   SendPort? _sendPort;
+
+  /// The subscription to the isolate's message stream.
+  StreamSubscription<dynamic>? _isolateSubscription;
+
+  /// The ReceivePort to listen for the isolate's exit message.
+  ReceivePort? _onExitPort;
 
   /// Clean up resources when the widget is removed from the tree.
   @override
   void dispose() {
-    _isolate?.kill(priority: Isolate.immediate);
-    _receivePort.close();
+    _sendPort?.send(null);
+    _isolateSubscription?.cancel();
+    _onExitPort?.first.then((_) {
+      _onExitPort?.close();
+    });
     super.dispose();
   }
 
@@ -109,10 +117,9 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
   }
 
   void _spawnIsolate() async {
-    _isolate?.kill(priority: Isolate.immediate);
     final receivePort = ReceivePort();
-    _isolate = await Isolate.spawn(particleIsolate, receivePort.sendPort);
-    receivePort.listen((message) {
+    _onExitPort = ReceivePort();
+    _isolateSubscription = receivePort.listen((message) {
       if (message is SendPort) {
         _sendPort = message;
         // Once we have the send port, we can initialize the particles
@@ -121,11 +128,18 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
       } else if (message is List<Particle>) {
         // When we receive a new list of particles from the isolate,
         // we update the state to trigger a repaint.
-        setState(() {
-          particles = message;
-        });
+        if (mounted) {
+          setState(() {
+            particles = message;
+          });
+        }
       }
     });
+    _isolate = await Isolate.spawn(
+      particleIsolate,
+      receivePort.sendPort,
+      onExit: _onExitPort!.sendPort,
+    );
   }
 
   void _initializeAndSendParticles() {

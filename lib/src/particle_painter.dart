@@ -1,6 +1,7 @@
-import 'package:atmospheric_particles/fade_direction.dart';
-import 'package:atmospheric_particles/particle.dart';
 import 'package:flutter/material.dart';
+
+import 'package:atmospheric_particles/src/fade_direction.dart';
+import 'package:atmospheric_particles/src/particle.dart';
 
 /// A [CustomPainter] responsible for drawing a list of [Particle] objects
 /// onto a [Canvas].

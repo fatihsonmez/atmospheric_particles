@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:isolate';
-import 'package:atmospheric_particles/isolate_message.dart';
-import 'package:atmospheric_particles/particle.dart';
+
 import 'package:flutter/material.dart';
+
+import 'package:atmospheric_particles/src/isolate_message.dart';
+import 'package:atmospheric_particles/src/particle.dart';
 
 void particleIsolate(SendPort sendPort) {
   final receivePort = ReceivePort();
@@ -13,7 +15,15 @@ void particleIsolate(SendPort sendPort) {
   Timer? timer;
   Duration lastTick = Duration.zero;
 
-  receivePort.listen((message) {
+  StreamSubscription? subscription;
+  subscription = receivePort.listen((message) {
+    if (message == null) {
+      timer?.cancel();
+      subscription?.cancel();
+      receivePort.close();
+      Isolate.exit();
+    }
+
     if (message is IsolateMessage) {
       particles = message.particles;
       size = message.size;

@@ -1,4 +1,4 @@
-import 'package:atmospheric_particles/particle.dart';
+import 'package:atmospheric_particles/src/particle.dart';
 import 'package:flutter/material.dart';
 
 class IsolateMessage {

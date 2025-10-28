@@ -1,8 +1,8 @@
-export 'fade_direction.dart';
-
-import 'package:atmospheric_particles/fade_direction.dart';
-import 'package:atmospheric_particles/particle_canvas.dart';
+export 'src/fade_direction.dart';
 import 'package:flutter/material.dart';
+
+import 'package:atmospheric_particles/src/fade_direction.dart';
+import 'package:atmospheric_particles/src/particle_canvas.dart';
 
 /// A user-friendly wrapper widget that displays an animated [ParticleCanvas]
 /// in the background and places a [child] widget on top of it.
