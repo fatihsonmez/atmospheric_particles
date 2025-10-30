@@ -1,3 +1,10 @@
+## [0.3.4]
+
+#### Changed
+* Improved code style, formatting, and readability across the project.
+* Enhanced null safety in `particle_canvas.dart`.
+* Minor cleanups in the example app and `README.md`.
+
 ## [0.3.3]
 
 #### Fixed
