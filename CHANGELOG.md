@@ -1,3 +1,9 @@
+## [0.3.3]
+
+#### Fixed
+* A bug where the fade effect was not correctly applied to particle trails.
+* A bug where the fade effect would jump when particles wrapped around the screen. The fade is now calculated per-segment for a smooth effect.
+
 ## [0.3.2]
 
 #### Changed
