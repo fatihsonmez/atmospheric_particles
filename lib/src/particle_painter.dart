@@ -29,6 +29,32 @@ class ParticlePainter extends CustomPainter {
   /// Its color is set dynamically within the `paint` method.
   final Paint _paint = Paint()..style = PaintingStyle.fill;
 
+  double _getFadeAlphaForPosition(Offset position, Size size) {
+    if (fadeDirection == FadeDirection.none) {
+      return 1.0;
+    }
+
+    double normalizedValue;
+    switch (fadeDirection) {
+      case FadeDirection.top:
+        normalizedValue = position.dy / (size.height == 0 ? 1 : size.height);
+        break;
+      case FadeDirection.bottom:
+        normalizedValue = 1.0 - (position.dy / (size.height == 0 ? 1 : size.height));
+        break;
+      case FadeDirection.left:
+        normalizedValue = position.dx / (size.width == 0 ? 1 : size.width);
+        break;
+      case FadeDirection.right:
+        normalizedValue = 1.0 - (position.dx / (size.width == 0 ? 1 : size.width));
+        break;
+      case FadeDirection.none:
+        normalizedValue = 1.0;
+        break;
+    }
+    return normalizedValue.clamp(0.0, 1.0);
+  }
+
   /// Called by the Flutter framework to paint on the canvas.
   @override
   void paint(Canvas canvas, Size size) {
@@ -36,42 +62,18 @@ class ParticlePainter extends CustomPainter {
       // Draw the trail
       for (var i = 0; i < particle.history.length; i++) {
         final historicalPosition = particle.history[i];
-        final opacity = (i / particle.history.length).clamp(0.0, 1.0);
+        final trailOpacity = (i / particle.history.length).clamp(0.0, 1.0);
+        final fadeAlpha = _getFadeAlphaForPosition(historicalPosition, size);
+        final finalOpacity = trailOpacity * fadeAlpha;
 
-        _paint.color = particle.color.withAlpha((opacity * 255).toInt());
+        _paint.color = particle.color.withAlpha((finalOpacity * 255).toInt());
         _drawShape(canvas, historicalPosition, particle.radius,
             particle.shape ?? ParticleShape.circle);
       }
 
-      // Draw the current particle position with full opacity or fade effect
-      if (fadeDirection == FadeDirection.none) {
-        _paint.color = particle.color;
-      } else {
-        double normalizedValue;
-        switch (fadeDirection) {
-          case FadeDirection.top:
-            normalizedValue =
-                particle.position.dy / (size.height == 0 ? 1 : size.height);
-            break;
-          case FadeDirection.bottom:
-            normalizedValue = 1.0 -
-                (particle.position.dy / (size.height == 0 ? 1 : size.height));
-            break;
-          case FadeDirection.left:
-            normalizedValue =
-                particle.position.dx / (size.width == 0 ? 1 : size.width);
-            break;
-          case FadeDirection.right:
-            normalizedValue = 1.0 -
-                (particle.position.dx / (size.width == 0 ? 1 : size.width));
-            break;
-          case FadeDirection.none:
-            normalizedValue = 1.0;
-            break;
-        }
-        final alpha = (normalizedValue.clamp(0.0, 1.0) * 255).toInt();
-        _paint.color = particle.color.withAlpha(alpha);
-      }
+      // Draw the current particle position
+      final fadeAlpha = _getFadeAlphaForPosition(particle.position, size);
+      _paint.color = particle.color.withAlpha((fadeAlpha * 255).toInt());
       _drawShape(canvas, particle.position, particle.radius,
           particle.shape ?? ParticleShape.circle);
     }
