@@ -73,11 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     const Text('Trail Length:'),
                     Slider(
                       value: _trailLength.toDouble(),
-                      min: 0,
                       max: 50,
                       divisions: 50,
-                      label: _trailLength.round().toString(),
-                      onChanged: (double value) {
+                      label: _trailLength.toString(),
+                      onChanged: (value) {
                         setState(() {
                           _trailLength = value.toInt();
                         });
@@ -96,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       max: 10.0,
                       divisions: 99,
                       label: _minParticleRadius.toStringAsFixed(1),
-                      onChanged: (double value) {
+                      onChanged: (value) {
                         setState(() {
                           _minParticleRadius = value;
                           if (_minParticleRadius > _maxParticleRadius) {
@@ -118,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       max: 10.0,
                       divisions: 99,
                       label: _maxParticleRadius.toStringAsFixed(1),
-                      onChanged: (double value) {
+                      onChanged: (value) {
                         setState(() {
                           _maxParticleRadius = value;
                           if (_maxParticleRadius < _minParticleRadius) {

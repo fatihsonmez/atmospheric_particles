@@ -78,8 +78,10 @@ void main() {
 
     // When particlesInFront is true, ParticleCanvas should be after the child
     expect(stack.children.first, isA<Text>());
-    expect(stack.children.last,
-        isA<ClipRRect>()); // ClipRRect wraps ParticleCanvas
+    expect(
+      stack.children.last,
+      isA<ClipRRect>(),
+    ); // ClipRRect wraps ParticleCanvas
   });
 
   testWidgets(
@@ -89,7 +91,6 @@ void main() {
       const MaterialApp(
         home: Scaffold(
           body: AtmosphericParticles(
-            particlesInFront: false,
             child: Text('Child Widget'),
           ),
         ),
@@ -103,8 +104,10 @@ void main() {
     final stack = tester.widget<Stack>(stackFinder);
 
     // When particlesInFront is false, ParticleCanvas should be before the child
-    expect(stack.children.first,
-        isA<ClipRRect>()); // ClipRRect wraps ParticleCanvas
+    expect(
+      stack.children.first,
+      isA<ClipRRect>(),
+    ); // ClipRRect wraps ParticleCanvas
     expect(stack.children.last, isA<Text>());
   });
 

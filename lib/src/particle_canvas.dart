@@ -102,7 +102,7 @@ class _ParticleCanvasState extends State<ParticleCanvas> {
 
   /// The isolate where the particle animation logic runs.
   // ignore: unused_field
-  Isolate? _isolate;
+  late Isolate _isolate;
 
   /// The port to send messages to the isolate.
   SendPort? _sendPort;

@@ -42,7 +42,6 @@ Import the package into your Dart file:
 
 ```dart
 import 'package:atmospheric_particles/atmospheric_particles.dart';
-import 'package:atmospheric_particles/fade_direction.dart';
 ```
 
 ## Usage

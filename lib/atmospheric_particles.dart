@@ -11,15 +11,6 @@ import 'package:atmospheric_particles/src/particle_canvas.dart';
 /// the process of adding particle effects by managing the canvas size
 /// and stacking.
 class AtmosphericParticles extends StatelessWidget {
-  static const double _defaultMaxHorizontalVelocity = 30;
-  static const double _defaultMinHorizontalVelocity = 10;
-  static const double _defaultMaxVerticalVelocity = -20;
-  static const double _defaultMinVerticalVelocity = -100;
-  static const int _defaultParticleCount = 200;
-  static const double _defaultMinParticleRadius = 2;
-  static const double _defaultMaxParticleRadius = 2;
-  static const int _defaultTrailLength = 0;
-
   /// Creates an [AtmosphericParticles] widget.
   ///
   /// The [child] widget is required and will be displayed on top of the
@@ -62,6 +53,14 @@ class AtmosphericParticles extends StatelessWidget {
           particleCount > 0,
           'particleCount must be bigger than 0',
         );
+  static const double _defaultMaxHorizontalVelocity = 30;
+  static const double _defaultMinHorizontalVelocity = 10;
+  static const double _defaultMaxVerticalVelocity = -20;
+  static const double _defaultMinVerticalVelocity = -100;
+  static const int _defaultParticleCount = 200;
+  static const double _defaultMinParticleRadius = 2;
+  static const double _defaultMaxParticleRadius = 2;
+  static const int _defaultTrailLength = 0;
 
   /// How the [child] widget is aligned within the [Stack].
   /// Defaults to [Alignment.topCenter].

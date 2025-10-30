@@ -40,13 +40,15 @@ class ParticlePainter extends CustomPainter {
         normalizedValue = position.dy / (size.height == 0 ? 1 : size.height);
         break;
       case FadeDirection.bottom:
-        normalizedValue = 1.0 - (position.dy / (size.height == 0 ? 1 : size.height));
+        normalizedValue =
+            1.0 - (position.dy / (size.height == 0 ? 1 : size.height));
         break;
       case FadeDirection.left:
         normalizedValue = position.dx / (size.width == 0 ? 1 : size.width);
         break;
       case FadeDirection.right:
-        normalizedValue = 1.0 - (position.dx / (size.width == 0 ? 1 : size.width));
+        normalizedValue =
+            1.0 - (position.dx / (size.width == 0 ? 1 : size.width));
         break;
       case FadeDirection.none:
         normalizedValue = 1.0;
@@ -67,15 +69,23 @@ class ParticlePainter extends CustomPainter {
         final finalOpacity = trailOpacity * fadeAlpha;
 
         _paint.color = particle.color.withAlpha((finalOpacity * 255).toInt());
-        _drawShape(canvas, historicalPosition, particle.radius,
-            particle.shape ?? ParticleShape.circle);
+        _drawShape(
+          canvas,
+          historicalPosition,
+          particle.radius,
+          particle.shape ?? ParticleShape.circle,
+        );
       }
 
       // Draw the current particle position
       final fadeAlpha = _getFadeAlphaForPosition(particle.position, size);
       _paint.color = particle.color.withAlpha((fadeAlpha * 255).toInt());
-      _drawShape(canvas, particle.position, particle.radius,
-          particle.shape ?? ParticleShape.circle);
+      _drawShape(
+        canvas,
+        particle.position,
+        particle.radius,
+        particle.shape ?? ParticleShape.circle,
+      );
     }
   }
 
