@@ -1,3 +1,9 @@
+## [0.3.1]
+
+#### Changed
+* Refactored `AtmosphericParticles` to use default values for constructor parameters, improving maintainability.
+* Added input validation assertions to `AtmosphericParticles` to prevent invalid parameter combinations.
+
 ## [0.3.0]
 
 #### Added

@@ -1,6 +1,6 @@
 name: atmospheric_particles
 description: "A lightweight and customizable Flutter package for creating beautiful particle animations and atmospheric effects in the background of any widget."
-version: 0.3.0
+version: 0.3.1
 homepage: https://github.com/fatihsonmez/atmospheric_particles
 repository: https://github.com/fatihsonmez/atmospheric_particles
 
