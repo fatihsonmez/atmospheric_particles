@@ -28,7 +28,7 @@ class AtmosphericParticles extends StatelessWidget {
   const AtmosphericParticles({
     required this.child,
     super.key,
-    this.childAlignment = AlignmentGeometry.topCenter,
+    this.childAlignment = Alignment.topCenter,
     this.height = double.infinity,
     this.fadeDirection = FadeDirection.none,
     this.maxHorizontalVelocity = _defaultMaxHorizontalVelocity,
@@ -64,7 +64,7 @@ class AtmosphericParticles extends StatelessWidget {
         );
 
   /// How the [child] widget is aligned within the [Stack].
-  /// Defaults to [AlignmentGeometry.topCenter].
+  /// Defaults to [Alignment.topCenter].
   final AlignmentGeometry childAlignment;
 
   /// The direction of the fade effect for the particles.

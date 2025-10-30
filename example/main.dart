@@ -135,7 +135,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   width: double.infinity,
                   child: AtmosphericParticles(
                     fadeDirection: FadeDirection.top,
-                    childAlignment: AlignmentGeometry.center,
+                    childAlignment: Alignment.center,
                     particlesInFront: _particlesInFront,
                     trailLength: _trailLength,
                     minParticleRadius: _minParticleRadius,
@@ -155,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: AtmosphericParticles(
                     fadeDirection: FadeDirection.bottom,
                     particleColor: Colors.amber,
-                    childAlignment: AlignmentGeometry.center,
+                    childAlignment: Alignment.center,
                     child: Text(
                       'Fade from Bottom',
                       style: TextStyle(
@@ -171,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: AtmosphericParticles(
                     fadeDirection: FadeDirection.left,
                     particleColor: Colors.lightBlue,
-                    childAlignment: AlignmentGeometry.center,
+                    childAlignment: Alignment.center,
                     child: Text(
                       'Fade from Left',
                       style: TextStyle(
@@ -187,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: AtmosphericParticles(
                     fadeDirection: FadeDirection.right,
                     particleColor: Colors.lightGreen,
-                    childAlignment: AlignmentGeometry.center,
+                    childAlignment: Alignment.center,
                     child: Text(
                       'Fade from Right',
                       style: TextStyle(
@@ -203,7 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     width: double.infinity,
                     child: AtmosphericParticles(
                       particleColor: colors[i % colors.length],
-                      childAlignment: AlignmentGeometry.center,
+                      childAlignment: Alignment.center,
                       child: const Text(
                         'Hello world!',
                         style: TextStyle(
