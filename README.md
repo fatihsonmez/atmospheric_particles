@@ -5,7 +5,10 @@ A lightweight, highly customizable Flutter package for creating beautiful partic
 
 ---
 
-![screenshot](https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWxpYTVtbzhjdjI2a2d1dWxxMmJ3bjQwYXdnOWRxMzV6d25tcDYwcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/70XAgXZr1ooT862yFx/giphy.gif)
+<p float="left">
+<img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdWxpYTVtbzhjdjI2a2d1dWxxMmJ3bjQwYXdnOWRxMzV6d25tcDYwcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/70XAgXZr1ooT862yFx/giphy.gif" width="400" />
+<img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXZ5aWZtbTdwd21oY3ZnZ2UydWhlZXZvdXdmbXlkZGo1M283YmVnMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eLGnnTMU3MKREaAkXD/giphy.gif" width="400" /> 
+</p>
 
 ---
 

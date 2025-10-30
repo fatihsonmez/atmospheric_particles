@@ -1,3 +1,8 @@
+## [0.3.2]
+
+#### Changed
+* **Refactor:** Replaced `AlignmentGeometry` with `Alignment` for the `childAlignment` property to simplify the API and align with Flutter's best practices.
+
 ## [0.3.1]
 
 #### Changed
