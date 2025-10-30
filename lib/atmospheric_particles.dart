@@ -11,6 +11,15 @@ import 'package:atmospheric_particles/src/particle_canvas.dart';
 /// the process of adding particle effects by managing the canvas size
 /// and stacking.
 class AtmosphericParticles extends StatelessWidget {
+  static const double _defaultMaxHorizontalVelocity = 30;
+  static const double _defaultMinHorizontalVelocity = 10;
+  static const double _defaultMaxVerticalVelocity = -20;
+  static const double _defaultMinVerticalVelocity = -100;
+  static const int _defaultParticleCount = 200;
+  static const double _defaultMinParticleRadius = 2;
+  static const double _defaultMaxParticleRadius = 2;
+  static const int _defaultTrailLength = 0;
+
   /// Creates an [AtmosphericParticles] widget.
   ///
   /// The [child] widget is required and will be displayed on top of the
@@ -22,20 +31,36 @@ class AtmosphericParticles extends StatelessWidget {
     this.childAlignment = AlignmentGeometry.topCenter,
     this.height = double.infinity,
     this.fadeDirection = FadeDirection.none,
-    this.maxHorizontalVelocity = 30,
-    this.minHorizontalVelocity = 10,
-    this.maxVerticalVelocity = -20,
-    this.minVerticalVelocity = -100,
+    this.maxHorizontalVelocity = _defaultMaxHorizontalVelocity,
+    this.minHorizontalVelocity = _defaultMinHorizontalVelocity,
+    this.maxVerticalVelocity = _defaultMaxVerticalVelocity,
+    this.minVerticalVelocity = _defaultMinVerticalVelocity,
     this.particleColor = Colors.deepPurple,
-    this.particleCount = 200,
-    this.minParticleRadius = 2,
-    this.maxParticleRadius = 2,
+    this.particleCount = _defaultParticleCount,
+    this.minParticleRadius = _defaultMinParticleRadius,
+    this.maxParticleRadius = _defaultMaxParticleRadius,
     this.width = double.infinity,
     this.particlesInFront = false,
-    this.trailLength = 0,
-  }) : assert(
+    this.trailLength = _defaultTrailLength,
+  })  : assert(
           minParticleRadius > 0,
           'minParticleRadius must be bigger than 0',
+        ),
+        assert(
+          minHorizontalVelocity <= maxHorizontalVelocity,
+          'minHorizontalVelocity must be less than or equal to maxHorizontalVelocity',
+        ),
+        assert(
+          minVerticalVelocity <= maxVerticalVelocity,
+          'minVerticalVelocity must be less than or equal to maxVerticalVelocity',
+        ),
+        assert(
+          minParticleRadius <= maxParticleRadius,
+          'minParticleRadius must be less than or equal to maxParticleRadius',
+        ),
+        assert(
+          particleCount > 0,
+          'particleCount must be bigger than 0',
         );
 
   /// How the [child] widget is aligned within the [Stack].
