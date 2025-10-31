@@ -1,3 +1,8 @@
+## [0.3.5]
+
+#### Added
+* Added an interactive sandbox for particle customization.
+
 ## [0.3.4]
 
 #### Changed

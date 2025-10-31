@@ -3,13 +3,12 @@
 
 A lightweight, highly customizable Flutter package for creating beautiful particle animations in the background of any widget.
 
----
-
 <p float="left">
-<img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXZ5aWZtbTdwd21oY3ZnZ2UydWhlZXZvdXdmbXlkZGo1M283YmVnMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eLGnnTMU3MKREaAkXD/giphy.gif" width="400" /> 
+<img src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXZ5aWZtbTdwd21oY3ZnZ2UydWhlZXZvdXdmbXlkZGo1M283YmVnMSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/eLGnnTMU3MKREaAkXD/giphy.gif" height="600" /> 
+<img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOG4wYTM1aTI4ZW5hM3VheTB4MGQ4Y2Zmc2Z5a2lxbnlhaGhnb2thcCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1JgEFkYsCLK3mdtbR2/giphy.gif" height="600" /> 
+
 </p>
 
----
 
 ## Features
 
@@ -27,7 +26,7 @@ Add the package to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  atmospheric_particles: ^0.3.3
+  atmospheric_particles: ^0.3.5
 ````
 
 Or, run this command in your terminal:
@@ -72,16 +71,6 @@ SizedBox(
 You can customize nearly every aspect of the particle field.
 
 ```dart
-List<Color> colors = [
-  Colors.red,
-  Colors.orange,
-  Colors.yellow.shade600,
-  Colors.green,
-  Colors.blue,
-  Colors.deepPurple,
-  Colors.purple,
-];
-
 // ... inside your build method
 SizedBox(
   height: 100,
