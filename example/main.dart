@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:atmospheric_particles/atmospheric_particles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,210 +14,194 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-        ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(),
+      home: const Sandbox(),
     );
   }
 }
 
-List<Color> colors = [
-  Colors.red,
-  Colors.orange,
-  Colors.yellow.shade600,
-  Colors.green,
-  Colors.blue,
-  Colors.deepPurple,
-  Colors.purple,
-];
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class Sandbox extends StatefulWidget {
+  const Sandbox({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Sandbox> createState() => _SandboxState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  bool _particlesInFront = false;
-  int _trailLength = 0;
-  double _minParticleRadius = 2;
-  double _maxParticleRadius = 2;
+class _SandboxState extends State<Sandbox> {
+  double particleCount = 100;
+  FadeDirection fadeDirection = FadeDirection.bottom;
+  double minVertical = 100;
+  double maxVertical = 200;
+  double minHorizontal = 60;
+  double maxHorizontal = 80;
+  double trailLength = 0;
+
+  late double _tempParticleCount;
+  late double _tempMinVertical;
+  late double _tempMaxVertical;
+  late double _tempMinHorizontal;
+  late double _tempMaxHorizontal;
+  late double _tempTrailLength;
+
+  @override
+  void initState() {
+    super.initState();
+    _tempParticleCount = particleCount;
+    _tempMinVertical = minVertical;
+    _tempMaxVertical = maxVertical;
+    _tempMinHorizontal = minHorizontal;
+    _tempMaxHorizontal = maxHorizontal;
+    _tempTrailLength = trailLength;
+  }
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Particles in Front'),
-                    Switch(
-                      value: _particlesInFront,
-                      onChanged: (value) {
-                        setState(() {
-                          _particlesInFront = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Trail Length:'),
-                    Slider(
-                      value: _trailLength.toDouble(),
-                      max: 50,
-                      divisions: 50,
-                      label: _trailLength.toString(),
-                      onChanged: (value) {
-                        setState(() {
-                          _trailLength = value.toInt();
-                        });
-                      },
-                    ),
-                    Text(_trailLength.toString()),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Min Particle Radius:'),
-                    Slider(
-                      value: _minParticleRadius,
-                      min: 0.1,
-                      max: 10.0,
-                      divisions: 99,
-                      label: _minParticleRadius.toStringAsFixed(1),
-                      onChanged: (value) {
-                        setState(() {
-                          _minParticleRadius = value;
-                          if (_minParticleRadius > _maxParticleRadius) {
-                            _maxParticleRadius = _minParticleRadius;
-                          }
-                        });
-                      },
-                    ),
-                    Text(_minParticleRadius.toStringAsFixed(1)),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Max Particle Radius:'),
-                    Slider(
-                      value: _maxParticleRadius,
-                      min: 0.1,
-                      max: 10.0,
-                      divisions: 99,
-                      label: _maxParticleRadius.toStringAsFixed(1),
-                      onChanged: (value) {
-                        setState(() {
-                          _maxParticleRadius = value;
-                          if (_maxParticleRadius < _minParticleRadius) {
-                            _minParticleRadius = _maxParticleRadius;
-                          }
-                        });
-                      },
-                    ),
-                    Text(_maxParticleRadius.toStringAsFixed(1)),
-                  ],
-                ),
-                SizedBox(
-                  height: 100,
-                  width: double.infinity,
-                  child: AtmosphericParticles(
-                    fadeDirection: FadeDirection.top,
-                    childAlignment: Alignment.center,
-                    particlesInFront: _particlesInFront,
-                    trailLength: _trailLength,
-                    minParticleRadius: _minParticleRadius,
-                    maxParticleRadius: _maxParticleRadius,
-                    child: const Text(
-                      'Fade from Top',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 100,
-                  width: double.infinity,
-                  child: AtmosphericParticles(
-                    fadeDirection: FadeDirection.bottom,
-                    particleColor: Colors.amber,
-                    childAlignment: Alignment.center,
-                    child: Text(
-                      'Fade from Bottom',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 100,
-                  width: double.infinity,
-                  child: AtmosphericParticles(
-                    fadeDirection: FadeDirection.left,
-                    particleColor: Colors.lightBlue,
-                    childAlignment: Alignment.center,
-                    child: Text(
-                      'Fade from Left',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 100,
-                  width: double.infinity,
-                  child: AtmosphericParticles(
-                    fadeDirection: FadeDirection.right,
-                    particleColor: Colors.lightGreen,
-                    childAlignment: Alignment.center,
-                    child: Text(
-                      'Fade from Right',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                for (int i = 0; i < 7; i++)
-                  SizedBox(
-                    height: 100,
-                    width: double.infinity,
-                    child: AtmosphericParticles(
-                      particleColor: colors[i % colors.length],
-                      childAlignment: Alignment.center,
-                      child: const Text(
-                        'Hello world!',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
+      backgroundColor: Colors.black,
+      body: Column(
+        children: [
+          Expanded(
+            child: AtmosphericParticles(
+              key: ValueKey(
+                '$particleCount-$fadeDirection-$minVertical-$maxVertical-$minHorizontal-$maxHorizontal-$trailLength',
+              ),
+              particleCount: particleCount.toInt(),
+              fadeDirection: fadeDirection,
+              minVerticalVelocity: minVertical,
+              maxVerticalVelocity: maxVertical,
+              minHorizontalVelocity: minHorizontal,
+              maxHorizontalVelocity: maxHorizontal,
+              particleColor: const Color(0xffff0000),
+              trailLength: trailLength.toInt(),
+              height: MediaQuery.of(context).size.height,
+              child: const SizedBox(),
             ),
           ),
-        ),
+          Container(
+            padding: const EdgeInsets.all(16),
+            color: Colors.grey[900],
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildSlider('Particle Count', _tempParticleCount, 10, 1000,
+                      (val) {
+                    setState(() => _tempParticleCount = val);
+                  }, (val) {
+                    setState(() => particleCount = val);
+                  }),
+                  _buildChips(
+                      'Fade Direction', FadeDirection.values, fadeDirection,
+                      (val) {
+                    setState(() => fadeDirection = val);
+                  }),
+                  _buildSlider('Min Vertical', _tempMinVertical, -500, 500,
+                      (val) {
+                    setState(
+                      () => _tempMinVertical = val.clamp(-500, maxVertical),
+                    );
+                  }, (val) {
+                    setState(() => minVertical = val.clamp(-500, maxVertical));
+                  }),
+                  _buildSlider('Max Vertical', _tempMaxVertical, -500, 500,
+                      (val) {
+                    setState(
+                      () => _tempMaxVertical = val.clamp(minVertical, 500),
+                    );
+                  }, (val) {
+                    setState(() => maxVertical = val.clamp(minVertical, 500));
+                  }),
+                  _buildSlider('Min Horizontal', _tempMinHorizontal, -500, 500,
+                      (val) {
+                    setState(
+                      () => _tempMinHorizontal = val.clamp(-500, maxHorizontal),
+                    );
+                  }, (val) {
+                    setState(
+                      () => minHorizontal = val.clamp(-500, maxHorizontal),
+                    );
+                  }),
+                  _buildSlider('Max Horizontal', _tempMaxHorizontal, -500, 500,
+                      (val) {
+                    setState(
+                      () => _tempMaxHorizontal = val.clamp(minHorizontal, 500),
+                    );
+                  }, (val) {
+                    setState(
+                      () => maxHorizontal = val.clamp(minHorizontal, 500),
+                    );
+                  }),
+                  _buildSlider('Trail Length', _tempTrailLength, 0, 100, (val) {
+                    setState(() => _tempTrailLength = val);
+                  }, (val) {
+                    setState(() => trailLength = val);
+                  }),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildSlider(
+    String label,
+    double value,
+    double min,
+    double max,
+    ValueChanged<double> onChanged,
+    ValueChanged<double> onChangeEnd,
+  ) {
+    return Row(
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white)),
+        Expanded(
+          child: Slider(
+            value: value,
+            min: min,
+            max: max,
+            onChanged: onChanged,
+            onChangeEnd: onChangeEnd,
+          ),
+        ),
+        Text(
+          value.toInt().toString(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildChips<T>(
+    String label,
+    List<T> options,
+    T selected,
+    ValueChanged<T> onSelected,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: options.map((option) {
+            return ChoiceChip(
+              selectedColor: Theme.of(context).primaryColor,
+              showCheckmark: false,
+              label: Text(
+                option.toString().split('.').last,
+                style: TextStyle(
+                  color: option == selected ? Colors.white : Colors.black,
+                ),
+              ),
+              selected: selected == option,
+              onSelected: (_) => onSelected(option),
+            );
+          }).toList(),
+        ),
+      ],
     );
   }
 }
