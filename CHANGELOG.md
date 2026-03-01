@@ -1,3 +1,8 @@
+## [0.3.6]
+
+#### Added
+* Removed unused particle shape enum.
+
 ## [0.3.5]
 
 #### Added

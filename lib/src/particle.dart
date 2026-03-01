@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:atmospheric_particles/src/particle_shape.dart';
 
 /// Represents a single particle in the animation.
 ///
@@ -16,7 +15,6 @@ class Particle {
     required this.radius,
     required this.velocity,
     required this.maxHistoryLength,
-    this.shape,
     this.image,
   }) : history = [position];
 
@@ -40,9 +38,6 @@ class Particle {
 
   /// The maximum number of past positions to store for the trail.
   final int maxHistoryLength;
-
-  /// The shape of the particle. If null, and [image] is also null, defaults to [ParticleShape.circle].
-  final ParticleShape? shape;
 
   /// The image to use for the particle. If provided, overrides [shape].
   final ImageProvider? image;
