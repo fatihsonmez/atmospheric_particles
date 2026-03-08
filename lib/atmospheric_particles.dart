@@ -32,7 +32,6 @@ class AtmosphericParticles extends StatelessWidget {
     this.maxParticleRadius = _defaultMaxParticleRadius,
     this.width = double.infinity,
     this.particlesInFront = false,
-    this.trailLength = _defaultTrailLength,
   })  : assert(
           minParticleRadius > 0,
           'minParticleRadius must be bigger than 0',
@@ -60,7 +59,6 @@ class AtmosphericParticles extends StatelessWidget {
   static const int _defaultParticleCount = 200;
   static const double _defaultMinParticleRadius = 2;
   static const double _defaultMaxParticleRadius = 2;
-  static const int _defaultTrailLength = 0;
 
   /// How the [child] widget is aligned within the [Stack].
   /// Defaults to [Alignment.topCenter].
@@ -112,9 +110,6 @@ class AtmosphericParticles extends StatelessWidget {
   /// Defaults to `false`, meaning particles are in the background.
   final bool particlesInFront;
 
-  /// The length of the particle trails. A value of 0 means no trail.
-  final int trailLength;
-
   @override
   Widget build(BuildContext context) {
     // Use LayoutBuilder to get the constraints (max width/height) from the parent.
@@ -139,7 +134,6 @@ class AtmosphericParticles extends StatelessWidget {
             maxHorizontalVelocity: maxHorizontalVelocity,
             minVerticalVelocity: minVerticalVelocity,
             maxVerticalVelocity: maxVerticalVelocity,
-            trailLength: trailLength,
           ),
         );
 

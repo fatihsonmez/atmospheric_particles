@@ -1,3 +1,10 @@
+## [0.4.0]
+
+#### Removed
+* Removed Isolate for better performance.
+* Used basic types for better performance.
+* Removed trail length for better performance.
+
 ## [0.3.6]
 
 #### Added

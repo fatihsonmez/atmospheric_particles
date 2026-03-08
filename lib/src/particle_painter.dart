@@ -5,86 +5,62 @@ import 'package:atmospheric_particles/src/particle.dart';
 
 /// A [CustomPainter] responsible for drawing a list of [Particle] objects
 /// onto a [Canvas].
-///
-/// This painter can draw particles with a uniform color or with an alpha
-/// (opacity) gradient based on their position and a specified [FadeDirection].
 class ParticlePainter extends CustomPainter {
-  /// Creates a [ParticlePainter].
-  ///
-  /// [particles] is the list of particles to draw.
-  /// [fadeDirection] determines the direction of the opacity gradient.
   ParticlePainter({
     required this.particles,
     this.fadeDirection = FadeDirection.none,
-  });
+    required this.color,
+    required Listenable repaint,
+  }) : super(repaint: repaint);
 
-  /// The list of [Particle] objects to be drawn.
   final List<Particle> particles;
-
-  /// The direction of the fade effect.
   final FadeDirection fadeDirection;
-
-  /// A reusable [Paint] object to configure how circles are drawn.
-  /// Its color is set dynamically within the `paint` method.
+  final Color color;
   final Paint _paint = Paint()..style = PaintingStyle.fill;
 
-  double _getFadeAlphaForPosition(Offset position, Size size) {
-    if (fadeDirection == FadeDirection.none) {
-      return 1.0;
-    }
-
-    double normalizedValue;
-    switch (fadeDirection) {
-      case FadeDirection.top:
-        normalizedValue = position.dy / (size.height == 0 ? 1 : size.height);
-        break;
-      case FadeDirection.bottom:
-        normalizedValue =
-            1.0 - (position.dy / (size.height == 0 ? 1 : size.height));
-        break;
-      case FadeDirection.left:
-        normalizedValue = position.dx / (size.width == 0 ? 1 : size.width);
-        break;
-      case FadeDirection.right:
-        normalizedValue =
-            1.0 - (position.dx / (size.width == 0 ? 1 : size.width));
-        break;
-      case FadeDirection.none:
-        normalizedValue = 1.0;
-        break;
-    }
-    return normalizedValue.clamp(0.0, 1.0);
-  }
-
-  /// Called by the Flutter framework to paint on the canvas.
   @override
   void paint(Canvas canvas, Size size) {
-    for (final particle in particles) {
-      // Draw the trail
-      for (var i = 0; i < particle.history.length; i++) {
-        final historicalPosition = particle.history[i];
-        final trailOpacity = (i / particle.history.length).clamp(0.0, 1.0);
-        final fadeAlpha = _getFadeAlphaForPosition(historicalPosition, size);
-        final finalOpacity = trailOpacity * fadeAlpha;
+    if (particles.isEmpty) return;
+    _paint.color = color;
 
-        _paint.color = particle.color.withAlpha((finalOpacity * 255).toInt());
-        canvas.drawCircle(particle.position, particle.radius, _paint);
+    // Fast path: skip all opacity math if fading is disabled
+    if (fadeDirection == FadeDirection.none) {
+      for (final particle in particles) {
+        canvas.drawCircle(
+            Offset(particle.x, particle.y), particle.radius, _paint);
+      }
+      return;
+    }
+
+    // Hoist invariants and prepare for multiplication over division
+    final double h = size.height == 0 ? 1.0 : size.height;
+    final double w = size.width == 0 ? 1.0 : size.width;
+    final double invH = 1.0 / h;
+    final double invW = 1.0 / w;
+
+    for (final particle in particles) {
+      final pos = Offset(particle.x, particle.y);
+
+      double alpha = switch (fadeDirection) {
+        FadeDirection.top => pos.dy * invH,
+        FadeDirection.bottom => 1.0 - (pos.dy * invH),
+        FadeDirection.left => pos.dx * invW,
+        FadeDirection.right => 1.0 - (pos.dx * invW),
+        FadeDirection.none => 1.0,
+      };
+
+      // Inline manual clamp for performance in tight loop
+      if (alpha < 0.0) {
+        alpha = 0.0;
+      } else if (alpha > 1.0) {
+        alpha = 1.0;
       }
 
-      // Draw the current particle position
-      final fadeAlpha = _getFadeAlphaForPosition(particle.position, size);
-      _paint.color = particle.color.withAlpha((fadeAlpha * 255).toInt());
-      canvas.drawCircle(particle.position, particle.radius, _paint);
+      _paint.color = color.withValues(alpha: alpha);
+      canvas.drawCircle(pos, particle.radius, _paint);
     }
   }
 
-  /// Determines whether the painter should repaint.
-  ///
-  /// This is set to `true` because the particle positions are expected
-  /// to change on every frame (due to the animation controller).
-  /// Returning `true` ensures the canvas is redrawn for each new frame.
   @override
-  bool shouldRepaint(covariant ParticlePainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(covariant ParticlePainter oldDelegate) => false;
 }

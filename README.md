@@ -26,7 +26,7 @@ Add the package to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  atmospheric_particles: ^0.3.5
+  atmospheric_particles: ^0.4.0
 ````
 
 Or, run this command in your terminal:

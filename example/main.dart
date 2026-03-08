@@ -35,14 +35,12 @@ class _SandboxState extends State<Sandbox> {
   double maxVertical = 200;
   double minHorizontal = 60;
   double maxHorizontal = 80;
-  double trailLength = 0;
 
   late double _tempParticleCount;
   late double _tempMinVertical;
   late double _tempMaxVertical;
   late double _tempMinHorizontal;
   late double _tempMaxHorizontal;
-  late double _tempTrailLength;
 
   @override
   void initState() {
@@ -52,7 +50,6 @@ class _SandboxState extends State<Sandbox> {
     _tempMaxVertical = maxVertical;
     _tempMinHorizontal = minHorizontal;
     _tempMaxHorizontal = maxHorizontal;
-    _tempTrailLength = trailLength;
   }
 
   @override
@@ -65,7 +62,7 @@ class _SandboxState extends State<Sandbox> {
           Expanded(
             child: AtmosphericParticles(
               key: ValueKey(
-                '$particleCount-$fadeDirection-$minVertical-$maxVertical-$minHorizontal-$maxHorizontal-$trailLength',
+                '$particleCount-$fadeDirection-$minVertical-$maxVertical-$minHorizontal-$maxHorizontal',
               ),
               particleCount: particleCount.toInt(),
               fadeDirection: fadeDirection,
@@ -74,7 +71,6 @@ class _SandboxState extends State<Sandbox> {
               minHorizontalVelocity: minHorizontal,
               maxHorizontalVelocity: maxHorizontal,
               particleColor: const Color(0xffff0000),
-              trailLength: trailLength.toInt(),
               height: MediaQuery.of(context).size.height,
               child: const SizedBox(),
             ),
@@ -131,11 +127,6 @@ class _SandboxState extends State<Sandbox> {
                     setState(
                       () => maxHorizontal = val.clamp(minHorizontal, 500),
                     );
-                  }),
-                  _buildSlider('Trail Length', _tempTrailLength, 0, 100, (val) {
-                    setState(() => _tempTrailLength = val);
-                  }, (val) {
-                    setState(() => trailLength = val);
                   }),
                 ],
               ),

@@ -111,28 +111,6 @@ void main() {
     expect(stack.children.last, isA<Text>());
   });
 
-  testWidgets('trailLength is passed to ParticleCanvas', (tester) async {
-    await tester.pumpWidget(
-      const MaterialApp(
-        home: Scaffold(
-          body: AtmosphericParticles(
-            trailLength: 10,
-            child: Text('Child Widget'),
-          ),
-        ),
-      ),
-    );
-
-    final particleCanvasFinder = find.descendant(
-      of: find.byType(AtmosphericParticles),
-      matching: find.byType(ParticleCanvas),
-    );
-
-    final particleCanvas = tester.widget<ParticleCanvas>(particleCanvasFinder);
-
-    expect(particleCanvas.trailLength, 10);
-  });
-
   testWidgets('minParticleRadius is passed to ParticleCanvas', (tester) async {
     await tester.pumpWidget(
       const MaterialApp(
