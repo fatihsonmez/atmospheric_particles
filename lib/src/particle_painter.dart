@@ -38,26 +38,31 @@ class ParticlePainter extends CustomPainter {
     final double invH = 1.0 / h;
     final double invW = 1.0 / w;
 
-    for (final particle in particles) {
-      final pos = Offset(particle.x, particle.y);
+    // Pre-compute base color components once to avoid per-particle work
+    final int baseArgb = color.toARGB32();
+    final int baseRgb = baseArgb & 0x00FFFFFF;
+    final int baseAlpha = (baseArgb >> 24) & 0xFF;
 
-      double alpha = switch (fadeDirection) {
-        FadeDirection.top => pos.dy * invH,
-        FadeDirection.bottom => 1.0 - (pos.dy * invH),
-        FadeDirection.left => pos.dx * invW,
-        FadeDirection.right => 1.0 - (pos.dx * invW),
+    for (final particle in particles) {
+      double fadeAlpha = switch (fadeDirection) {
+        FadeDirection.top => particle.y * invH,
+        FadeDirection.bottom => 1.0 - (particle.y * invH),
+        FadeDirection.left => particle.x * invW,
+        FadeDirection.right => 1.0 - (particle.x * invW),
         FadeDirection.none => 1.0,
       };
 
       // Inline manual clamp for performance in tight loop
-      if (alpha < 0.0) {
-        alpha = 0.0;
-      } else if (alpha > 1.0) {
-        alpha = 1.0;
+      if (fadeAlpha < 0.0) {
+        fadeAlpha = 0.0;
+      } else if (fadeAlpha > 1.0) {
+        fadeAlpha = 1.0;
       }
 
-      _paint.color = color.withValues(alpha: alpha);
-      canvas.drawCircle(pos, particle.radius, _paint);
+      // Multiply the color's own alpha by the fade alpha so that a semi-transparent
+      // particleColor is respected rather than overwritten by the fade calculation.
+      _paint.color = Color(((baseAlpha * fadeAlpha).round() << 24) | baseRgb);
+      canvas.drawCircle(Offset(particle.x, particle.y), particle.radius, _paint);
     }
   }
 

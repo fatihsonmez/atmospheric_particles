@@ -1,17 +1,20 @@
-/// An enum that defines the direction of the fade effect for the particles.
+/// Controls the direction of the opacity gradient applied to particles.
+///
+/// When a fade direction is set, particles become transparent as they approach
+/// the corresponding edge of the canvas and fully opaque at the opposite edge.
 enum FadeDirection {
-  /// Fade from the top of the canvas.
+  /// Particles fade out toward the top edge (transparent at top, opaque at bottom).
   top,
 
-  /// Fade from the bottom of the canvas.
+  /// Particles fade out toward the bottom edge (transparent at bottom, opaque at top).
   bottom,
 
-  /// Fade from the left of the canvas.
+  /// Particles fade out toward the left edge (transparent at left, opaque at right).
   left,
 
-  /// Fade from the right of the canvas.
+  /// Particles fade out toward the right edge (transparent at right, opaque at left).
   right,
 
-  /// No fade effect.
+  /// No fade effect is applied. All particles are drawn at full opacity.
   none,
 }

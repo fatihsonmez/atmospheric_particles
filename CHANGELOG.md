@@ -1,3 +1,17 @@
+## [1.0.0]
+
+#### Fixed
+* `particleColor` alpha is now respected when combined with `fadeDirection`. Previously the fade effect overwrote the color's own opacity; it now multiplies the two alphas so a semi-transparent color fades correctly.
+
+#### Changed
+* Deprecated `Color.value` usage replaced with `Color.toARGB32()`.
+
+#### Documentation
+* `FadeDirection` enum values now clearly describe which edge becomes transparent and which stays opaque.
+* `Particle` class and all its fields are now documented.
+* README: removed stale `trailLength` parameter (removed in v0.4.0), fixed advanced example that referenced the removed `particleRadius` property, added missing `childAlignment`, `width`, and `height` entries to the API table, corrected `particleColor` description to mention alpha support.
+* Corrected CHANGELOG entry for v0.3.2 to accurately reflect the `AlignmentGeometry` type change.
+
 ## [0.4.0]
 
 #### Removed
@@ -31,7 +45,7 @@
 ## [0.3.2]
 
 #### Changed
-* **Refactor:** Replaced `AlignmentGeometry` with `Alignment` for the `childAlignment` property to simplify the API and align with Flutter's best practices.
+* **Refactor:** Typed `childAlignment` as `AlignmentGeometry` (the Flutter base type for alignment values) to allow both `Alignment` and `AlignmentDirectional` to be passed.
 
 ## [0.3.1]
 

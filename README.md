@@ -26,7 +26,7 @@ Add the package to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  atmospheric_particles: ^0.4.0
+  atmospheric_particles: ^1.0.0
 ````
 
 Or, run this command in your terminal:
@@ -77,7 +77,8 @@ SizedBox(
   width: double.infinity,
   child: AtmosphericParticles(
     particleColor: Colors.blue,
-    particleRadius: 3,
+    minParticleRadius: 2,
+    maxParticleRadius: 4,
     particleCount: 100,
     fadeDirection: FadeDirection.bottom,
     minVerticalVelocity: -30,
@@ -93,18 +94,20 @@ SizedBox(
 
 | Property | Type | Description |
 | :--- | :--- | :--- |
-| **`child`** | `Widget` | The widget to display in front of the particle field. |
+| **`child`** | `Widget` | The widget to display on top of (or behind) the particle field. |
+| **`childAlignment`** | `AlignmentGeometry` | How the `child` is aligned within the stack. Defaults to `Alignment.topCenter`. |
 | **`fadeDirection`** | `FadeDirection` | The direction of the opacity gradient. Can be `FadeDirection.top`, `bottom`, `left`, `right`, or `none`. Defaults to `FadeDirection.none`. |
-| **`particleColor`** | `Color` | The color of the particles. Defaults to `Colors.purple` with opacity. |
+| **`particleColor`** | `Color` | The color of the particles. Alpha is respected — pass a color with opacity to make all particles semi-transparent. Defaults to `Colors.deepPurple`. |
 | **`particleCount`** | `int` | The total number of particles to render. Defaults to `200`. |
-| **`minParticleRadius`** | `double` | The minimum radius of each particle. Defaults to `2`. |
+| **`minParticleRadius`** | `double` | The minimum radius of each particle. Must be greater than `0`. Defaults to `2`. |
 | **`maxParticleRadius`** | `double` | The maximum radius of each particle. Defaults to `2`. |
-| **`minVerticalVelocity`** | `double` | The minimum *upward* speed. (Use negative values for upward motion). Defaults to `-100`. |
-| **`maxVerticalVelocity`** | `double` | The maximum *upward* speed. (Use negative values for upward motion). Defaults to `-20`. |
-| **`minHorizontalVelocity`** | `double` | The minimum *horizontal* speed. (Negative for left, positive for right). Defaults to `10`. |
-| **`maxHorizontalVelocity`** | `double` | The maximum *horizontal* speed. (Negative for left, positive for right). Defaults to `30`. |
+| **`minVerticalVelocity`** | `double` | The minimum vertical speed in pixels per second. Negative values move upward. Defaults to `-100`. |
+| **`maxVerticalVelocity`** | `double` | The maximum vertical speed in pixels per second. Negative values move upward. Defaults to `-20`. |
+| **`minHorizontalVelocity`** | `double` | The minimum horizontal speed in pixels per second. Negative values move left. Defaults to `10`. |
+| **`maxHorizontalVelocity`** | `double` | The maximum horizontal speed in pixels per second. Negative values move left. Defaults to `30`. |
+| **`width`** | `double` | Width of the particle canvas. Defaults to `double.infinity` (fills available width). |
+| **`height`** | `double` | Height of the particle canvas. Defaults to `double.infinity` (fills available height). |
 | **`particlesInFront`** | `bool` | Whether the particles should be rendered in front of the child widget. Defaults to `false`. |
-| **`trailLength`** | `int` | The number of historical positions to store for each particle, creating a trail effect. Defaults to `0` (no trail). |
 
 ## Additional Information
 

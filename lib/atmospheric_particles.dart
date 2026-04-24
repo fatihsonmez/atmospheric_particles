@@ -116,7 +116,7 @@ class AtmosphericParticles extends StatelessWidget {
     // This is essential for making `double.infinity` work correctly.
     return LayoutBuilder(
       builder: (context, constraints) {
-        final particleCanvas = ClipRRect(
+        final particleCanvas = ClipRect(
           child: ParticleCanvas(
             // If the user provided a finite width, use it.
             // Otherwise, use the maxWidth from the LayoutBuilder.
