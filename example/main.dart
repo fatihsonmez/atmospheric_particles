@@ -1,8 +1,12 @@
-import 'package:atmospheric_particles/atmospheric_particles.dart';
+// The example uses Material widgets; the package itself only needs widgets.dart.
+// ignore: deprecated_member_use
 import 'package:flutter/material.dart';
+import 'package:atmospheric_particles/atmospheric_particles.dart';
 import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(const MyApp());
 }
 
@@ -54,16 +58,12 @@ class _SandboxState extends State<Sandbox> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
         children: [
           Expanded(
             child: AtmosphericParticles(
-              key: ValueKey(
-                '$particleCount-$fadeDirection-$minVertical-$maxVertical-$minHorizontal-$maxHorizontal',
-              ),
               particleCount: particleCount.toInt(),
               fadeDirection: fadeDirection,
               minVerticalVelocity: minVertical,
@@ -71,7 +71,6 @@ class _SandboxState extends State<Sandbox> {
               minHorizontalVelocity: minHorizontal,
               maxHorizontalVelocity: maxHorizontal,
               particleColor: const Color(0xffff0000),
-              height: MediaQuery.of(context).size.height,
               child: const SizedBox(),
             ),
           ),
@@ -165,7 +164,7 @@ class _SandboxState extends State<Sandbox> {
     );
   }
 
-  Widget _buildChips<T>(
+  Widget _buildChips<T extends Enum>(
     String label,
     List<T> options,
     T selected,
@@ -182,7 +181,7 @@ class _SandboxState extends State<Sandbox> {
               selectedColor: Theme.of(context).primaryColor,
               showCheckmark: false,
               label: Text(
-                option.toString().split('.').last,
+                option.name,
                 style: TextStyle(
                   color: option == selected ? Colors.white : Colors.black,
                 ),

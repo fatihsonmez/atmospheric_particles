@@ -1,8 +1,9 @@
-export 'src/fade_direction.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:atmospheric_particles/src/fade_direction.dart';
 import 'package:atmospheric_particles/src/particle_canvas.dart';
+
+export 'src/fade_direction.dart';
 
 /// A user-friendly wrapper widget that displays an animated [ParticleCanvas]
 /// in the background and places a [child] widget on top of it.
@@ -26,7 +27,7 @@ class AtmosphericParticles extends StatelessWidget {
     this.minHorizontalVelocity = _defaultMinHorizontalVelocity,
     this.maxVerticalVelocity = _defaultMaxVerticalVelocity,
     this.minVerticalVelocity = _defaultMinVerticalVelocity,
-    this.particleColor = Colors.deepPurple,
+    this.particleColor = _defaultParticleColor,
     this.particleCount = _defaultParticleCount,
     this.minParticleRadius = _defaultMinParticleRadius,
     this.maxParticleRadius = _defaultMaxParticleRadius,
@@ -49,14 +50,15 @@ class AtmosphericParticles extends StatelessWidget {
           'minParticleRadius must be less than or equal to maxParticleRadius',
         ),
         assert(
-          particleCount > 0,
-          'particleCount must be bigger than 0',
+          particleCount >= 0,
+          'particleCount must not be negative',
         );
   static const double _defaultMaxHorizontalVelocity = 30;
   static const double _defaultMinHorizontalVelocity = 10;
   static const double _defaultMaxVerticalVelocity = -20;
   static const double _defaultMinVerticalVelocity = -100;
   static const int _defaultParticleCount = 200;
+  static const Color _defaultParticleColor = Color(0xFF673AB7); // deep purple
   static const double _defaultMinParticleRadius = 2;
   static const double _defaultMaxParticleRadius = 2;
 
@@ -68,14 +70,18 @@ class AtmosphericParticles extends StatelessWidget {
   /// Defaults to [FadeDirection.none].
   final FadeDirection fadeDirection;
 
-  /// The base color of the particles.
+  /// The base color of the particles. Its alpha is respected, also when
+  /// combined with [fadeDirection]. Defaults to deep purple (`0xFF673AB7`).
   final Color particleColor;
 
   /// The desired height of the particle canvas.
-  /// Defaults to [double.infinity], which will fill the available vertical space.
+  /// Defaults to [double.infinity], which fills the available vertical space.
+  /// If the parent gives unbounded height (e.g. inside a [Column] or a
+  /// vertical scroll view), the canvas takes the height of [child] instead.
   final double height;
 
   /// The maximum horizontal speed of particles (pixels per second).
+  /// Negative values move left.
   final double maxHorizontalVelocity;
 
   /// The maximum vertical speed of particles (pixels per second).
@@ -97,10 +103,13 @@ class AtmosphericParticles extends StatelessWidget {
   final double maxParticleRadius;
 
   /// The desired width of the particle canvas.
-  /// Defaults to [double.infinity], which will fill the available horizontal space.
+  /// Defaults to [double.infinity], which fills the available horizontal space.
+  /// If the parent gives unbounded width (e.g. inside a [Row]), the canvas
+  /// takes the width of [child] instead.
   final double width;
 
-  /// The total number of particles to create and animate.
+  /// The total number of particles to create and animate. `0` shows no
+  /// particles and stops the animation.
   final int particleCount;
 
   /// The widget to display in front of the particle animation.
@@ -112,37 +121,62 @@ class AtmosphericParticles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use LayoutBuilder to get the constraints (max width/height) from the parent.
-    // This is essential for making `double.infinity` work correctly.
+    // LayoutBuilder resolves `double.infinity` to the space the parent offers.
     return LayoutBuilder(
       builder: (context, constraints) {
-        final particleCanvas = ClipRect(
-          child: ParticleCanvas(
-            // If the user provided a finite width, use it.
-            // Otherwise, use the maxWidth from the LayoutBuilder.
-            width: width.isInfinite ? constraints.maxWidth : width,
-            // If the user provided a finite height, use it.
-            // Otherwise, use the maxHeight from the LayoutBuilder.
-            height: height.isInfinite ? constraints.maxHeight : height,
-            // Pass all the particle properties down to the canvas.
-            color: particleColor,
-            numberOfParticles: particleCount,
-            fadeDirection: fadeDirection,
-            minParticleRadius: minParticleRadius,
-            maxParticleRadius: maxParticleRadius,
-            minHorizontalVelocity: minHorizontalVelocity,
-            maxHorizontalVelocity: maxHorizontalVelocity,
-            minVerticalVelocity: minVerticalVelocity,
-            maxVerticalVelocity: maxVerticalVelocity,
-          ),
-        );
+        final double? resolvedWidth = width.isFinite
+            ? width
+            : (constraints.hasBoundedWidth ? constraints.maxWidth : null);
+        final double? resolvedHeight = height.isFinite
+            ? height
+            : (constraints.hasBoundedHeight ? constraints.maxHeight : null);
 
-        return Stack(
+        ParticleCanvas canvas(double w, double h) => ParticleCanvas(
+              width: w,
+              height: h,
+              color: particleColor,
+              numberOfParticles: particleCount,
+              fadeDirection: fadeDirection,
+              minParticleRadius: minParticleRadius,
+              maxParticleRadius: maxParticleRadius,
+              minHorizontalVelocity: minHorizontalVelocity,
+              maxHorizontalVelocity: maxHorizontalVelocity,
+              minVerticalVelocity: minVerticalVelocity,
+              maxVerticalVelocity: maxVerticalVelocity,
+            );
+
+        final Widget particleLayer;
+        if (resolvedWidth != null && resolvedHeight != null) {
+          particleLayer = ClipRect(
+            child: canvas(resolvedWidth, resolvedHeight),
+          );
+        } else {
+          // Unbounded in at least one axis: let the child decide the size and
+          // stretch the particles over it.
+          particleLayer = Positioned.fill(
+            child: ClipRect(
+              child: LayoutBuilder(
+                builder: (context, c) => canvas(c.maxWidth, c.maxHeight),
+              ),
+            ),
+          );
+        }
+
+        final stack = Stack(
           alignment: childAlignment,
           children: particlesInFront
-              ? [child, particleCanvas]
-              : [particleCanvas, child],
+              ? [child, particleLayer]
+              : [particleLayer, child],
         );
+
+        if (particleLayer is Positioned) {
+          return SizedBox(
+            width: resolvedWidth,
+            height: resolvedHeight,
+            child: stack,
+          );
+        }
+        return stack;
       },
     );
   }

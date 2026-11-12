@@ -1,3 +1,24 @@
+## [1.1.0]
+
+#### Fixed
+* No longer crashes inside a `Column`, `Row` or scroll view. When the parent gives unbounded constraints, the particle canvas now takes the size of `child`.
+* Changing `minHorizontalVelocity`, `maxHorizontalVelocity`, `minVerticalVelocity` or `maxVerticalVelocity` at runtime now takes effect immediately, without recreating the widget.
+* Particles now spread over the new area when the widget is resized (e.g. window resize or device rotation) instead of staying in the old area.
+* Particles no longer jump when the animation resumes after being paused (e.g. when another route was on top). The time step per frame is now capped.
+* Changing `particleColor` or `fadeDirection` now always repaints.
+
+#### Changed
+* Rendering is much faster: particles of the same size are drawn in a single batch, and the fade is applied with one gradient instead of a color per particle. At 20,000 particles, raster time per frame dropped from about 19.5 ms to under 3 ms in our benchmark (macOS, profile mode), and the animation keeps 60 fps.
+* Particle radii are rounded to 0.25 logical pixels so equal sizes can be batched. The difference is not visible.
+* `particleCount` may now be `0`, which shows no particles and stops the animation.
+* The animation stops when the platform asks to reduce motion (`MediaQuery.disableAnimations`).
+* The package now depends only on `package:flutter/widgets.dart` instead of the deprecated `package:flutter/material.dart`. The default `particleColor` is unchanged (`Color(0xFF673AB7)`, deep purple).
+* Minimum versions raised to Flutter 3.27 / Dart 3.6, which the code already required (`Color.toARGB32()`, switch expressions).
+
+#### Tests
+* Fixed two tests that expected a `ClipRRect` instead of a `ClipRect`.
+* Added regression tests for each fix above.
+
 ## [1.0.0]
 
 #### Fixed

@@ -42,9 +42,10 @@ The project follows the standard Dart and Flutter coding styles, enforced by the
 
 *   `lib/`: Contains the main source code for the package.
     *   `atmospheric_particles.dart`: The main widget and public API.
-    *   `particle_canvas.dart`: The canvas where the particles are drawn.
-    *   `particle_painter.dart`: The `CustomPainter` for drawing the particles.
-    *   `particle.dart`: The data model for a single particle.
+    *   `src/fade_direction.dart`: The `FadeDirection` enum (exported).
+    *   `src/particle_canvas.dart`: Stateful widget that owns the ticker and updates particles.
+    *   `src/particle_painter.dart`: The `CustomPainter` for drawing the particles.
+    *   `src/particle.dart`: The data model for a single particle.
 *   `example/`: Contains an example Flutter application demonstrating the package's usage.
 *   `pubspec.yaml`: Defines the package metadata and dependencies.
 *   `analysis_options.yaml`: Configures the Dart analyzer and linter.

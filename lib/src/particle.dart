@@ -4,6 +4,14 @@
 /// Fields are mutable because the animation loop updates them in-place
 /// every frame to avoid allocations.
 class Particle {
+  Particle({
+    required this.x,
+    required this.y,
+    required this.vx,
+    required this.vy,
+    required this.radius,
+  });
+
   /// Current horizontal position in logical pixels.
   double x;
 
@@ -18,12 +26,4 @@ class Particle {
 
   /// Radius of the particle in logical pixels.
   double radius;
-
-  Particle({
-    required this.x,
-    required this.y,
-    required this.vx,
-    required this.vy,
-    required this.radius,
-  });
 }

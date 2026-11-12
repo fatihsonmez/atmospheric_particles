@@ -1,4 +1,8 @@
 include: package:flutter_lints/flutter.yaml
 
-flutter:
-  preserve_commas: true
+formatter:
+  trailing_commas: preserve
+
+analyzer:
+  exclude:
+    - build/**

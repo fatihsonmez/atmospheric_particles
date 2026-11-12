@@ -15,19 +15,22 @@ A lightweight, highly customizable Flutter package for creating beautiful partic
 * **Highly Customizable:** Control particle color, size, count, and speed.
 * **Directional Control:** Set minimum and maximum velocities for both horizontal and vertical axes.
 * **Directional Fade:** Apply a fade effect from the top, bottom, left, or right.
-* **Lightweight:** Simple and efficient, designed to wrap any widget without performance issues.
+* **Lightweight:** Particles are drawn in batches, so even thousands of them stay at 60 fps.
+* **Accessible:** The animation stops when the platform asks to reduce motion.
 * **Easy to Use:** Get started immediately with beautiful default parameters.
 
 ## Getting Started
 
 ### 1. Installation
 
+Requires Flutter 3.27 or later.
+
 Add the package to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  atmospheric_particles: ^1.0.0
-````
+  atmospheric_particles: ^1.1.0
+```
 
 Or, run this command in your terminal:
 
@@ -35,7 +38,7 @@ Or, run this command in your terminal:
 flutter pub add atmospheric_particles
 ```
 
-### 2\. Import
+### 2. Import
 
 Import the package into your Dart file:
 
@@ -45,7 +48,7 @@ import 'package:atmospheric_particles/atmospheric_particles.dart';
 
 ## Usage
 
-The `AtmosphericParticles` widget can be wrapped around any widget. It works best inside a `SizedBox` or `Container` to give it explicit dimensions.
+The `AtmosphericParticles` widget can be wrapped around any widget. By default it fills the space its parent gives it. Inside a `Column`, `Row` or scroll view, where that space is unbounded, it takes the size of its `child` instead.
 
 ### Basic Example
 
@@ -87,7 +90,7 @@ SizedBox(
     maxHorizontalVelocity: -10,
     child: const Center(child: Text('Customized Particles')),
   ),
-),
+)
 ```
 
 ## Widget Properties (API)
@@ -97,16 +100,16 @@ SizedBox(
 | **`child`** | `Widget` | The widget to display on top of (or behind) the particle field. |
 | **`childAlignment`** | `AlignmentGeometry` | How the `child` is aligned within the stack. Defaults to `Alignment.topCenter`. |
 | **`fadeDirection`** | `FadeDirection` | The direction of the opacity gradient. Can be `FadeDirection.top`, `bottom`, `left`, `right`, or `none`. Defaults to `FadeDirection.none`. |
-| **`particleColor`** | `Color` | The color of the particles. Alpha is respected — pass a color with opacity to make all particles semi-transparent. Defaults to `Colors.deepPurple`. |
-| **`particleCount`** | `int` | The total number of particles to render. Defaults to `200`. |
+| **`particleColor`** | `Color` | The color of the particles. Alpha is respected — pass a color with opacity to make all particles semi-transparent. Defaults to deep purple (`Color(0xFF673AB7)`). |
+| **`particleCount`** | `int` | The total number of particles to render. `0` shows none and stops the animation. Defaults to `200`. |
 | **`minParticleRadius`** | `double` | The minimum radius of each particle. Must be greater than `0`. Defaults to `2`. |
 | **`maxParticleRadius`** | `double` | The maximum radius of each particle. Defaults to `2`. |
 | **`minVerticalVelocity`** | `double` | The minimum vertical speed in pixels per second. Negative values move upward. Defaults to `-100`. |
 | **`maxVerticalVelocity`** | `double` | The maximum vertical speed in pixels per second. Negative values move upward. Defaults to `-20`. |
 | **`minHorizontalVelocity`** | `double` | The minimum horizontal speed in pixels per second. Negative values move left. Defaults to `10`. |
 | **`maxHorizontalVelocity`** | `double` | The maximum horizontal speed in pixels per second. Negative values move left. Defaults to `30`. |
-| **`width`** | `double` | Width of the particle canvas. Defaults to `double.infinity` (fills available width). |
-| **`height`** | `double` | Height of the particle canvas. Defaults to `double.infinity` (fills available height). |
+| **`width`** | `double` | Width of the particle canvas. Defaults to `double.infinity` (fills available width, or the `child`'s width if the width is unbounded). |
+| **`height`** | `double` | Height of the particle canvas. Defaults to `double.infinity` (fills available height, or the `child`'s height if the height is unbounded). |
 | **`particlesInFront`** | `bool` | Whether the particles should be rendered in front of the child widget. Defaults to `false`. |
 
 ## Additional Information
